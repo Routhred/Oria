@@ -1,2 +1,2 @@
 # Oria
-![[Oria.png]]
+[[Oria.png]]
