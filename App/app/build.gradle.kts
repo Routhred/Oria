@@ -67,6 +67,15 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // navigation
+    // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
+
+    // Server
+    implementation("com.android.volley:volley:1.2.1")
+
+    // Json
+    implementation("com.google.code.gson:gson:2.10")
+
+    // Splash screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

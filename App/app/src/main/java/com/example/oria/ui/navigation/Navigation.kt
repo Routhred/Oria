@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
 import com.example.oria.ui.view.auth.RegisterPage
+import com.example.oria.ui.view.home.HomePage
 
 @Composable
 fun NavigationGraph(ctx: Context) {
@@ -29,20 +30,23 @@ fun NavigationGraph(ctx: Context) {
             composable(route = Screen.RegisterScreen.route) {
                 RegisterPage(navController = navController)
             }
-            composable(route = Screen.PasswordScreen.route){
+            composable(route = Screen.PasswordScreen.route) {
                 PasswordPage(navController = navController)
             }
         }
         navigation(
-            startDestination = "home_screen",
+            startDestination = "home",
             route = "main",
         ) {
+            composable(route = Screen.HomeScreen.route) {
+                HomePage(navController = navController)
+            }
         }
-        navigation(
+       /*navigation(
             startDestination = "picture_screen",
             route = "picture",
         ) {
-            /*composable(route = Screen.PictureScreen.route) {
+            composable(route = Screen.PictureScreen.route) {
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
                 viewModel.navController = navController
                 PicturePage(ctx, navController = navController)
@@ -54,8 +58,8 @@ fun NavigationGraph(ctx: Context) {
             composable(route = Screen.PhotoScreen.route) {
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
                 DisplayPhoto(navController = navController, viewModel)
-            }*/
-        }
+            }
+        }*/
     }
 }
 
