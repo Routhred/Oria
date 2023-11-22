@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
 import com.example.oria.ui.view.auth.RegisterPage
-import com.example.oria.ui.view.home.HomePage
+import com.example.oria.ui.view.HomePage
 
 @Composable
 fun NavigationGraph(ctx: Context) {

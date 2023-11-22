@@ -1,4 +1,4 @@
-package com.example.oria.ui.view.home
+package com.example.oria.ui.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
