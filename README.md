@@ -1,2 +1,0 @@
-# Oria
-[[Oria.png]]
