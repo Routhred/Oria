@@ -11,6 +11,16 @@ sealed class Screen(val route: String) {
     object RegisterScreen : Screen("register")
     object HomeScreen : Screen("home")
     object PasswordScreen : Screen("password")
+    object ParametersScreen : Screen("parameters")
+    object ProfileScreen : Screen("profile")
+    object AccountScreen : Screen("account")
+    object GalleryScreen : Screen("gallery")
+
+    object ImportTripScreen : Screen("importTrip")
+    object CreateTripScreen : Screen("createTrip")
+    object AddPointScreen : Screen("addPoint")
+    object CurrentTripScreen : Screen("currentTrip")
+    object PointScreen : Screen("point")
 }
 
 @Composable

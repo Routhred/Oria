@@ -8,5 +8,5 @@ val TEXT_FIELD_ROUNDING_CORNER = 20.dp
 val TEXT_FIELD_WIDTH = 320.dp
 val TEXT_FIELD_HEIGHT = 73.dp
 
-const val GRID_ROW = 33
-const val GRID_COLUMN = 15
+const val GRID_ROW = 20
+const val GRID_COLUMN = 9

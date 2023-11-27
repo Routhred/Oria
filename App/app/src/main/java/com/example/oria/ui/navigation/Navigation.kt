@@ -15,6 +15,15 @@ import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
 import com.example.oria.ui.view.auth.RegisterPage
 import com.example.oria.ui.view.HomePage
+import com.example.oria.ui.view.parameters.AccountPage
+import com.example.oria.ui.view.parameters.ParametersPage
+import com.example.oria.ui.view.parameters.ProfilePage
+import com.example.oria.ui.view.trip.AddPointPage
+import com.example.oria.ui.view.trip.CreateTripPage
+import com.example.oria.ui.view.trip.CurrentTripPage
+import com.example.oria.ui.view.trip.GalleryPage
+import com.example.oria.ui.view.trip.ImportTripPage
+import com.example.oria.ui.view.trip.PointPage
 
 @Composable
 fun NavigationGraph(ctx: Context) {
@@ -41,6 +50,46 @@ fun NavigationGraph(ctx: Context) {
             composable(route = Screen.HomeScreen.route) {
                 HomePage(navController = navController)
             }
+            composable(route = Screen.CurrentTripScreen.route){
+                CurrentTripPage(navController = navController)
+            }
+
+        }
+        navigation(
+            startDestination = "parameters",
+            route = "params"
+        ){
+            composable(route = Screen.ParametersScreen.route) {
+                ParametersPage(navController = navController)
+            }
+
+            composable(route = Screen.AccountScreen.route) {
+                AccountPage(navController = navController)
+            }
+
+        }
+        navigation(
+            startDestination = "gallery",
+            route = "trip"
+        ){
+            composable(route = Screen.GalleryScreen.route){
+                GalleryPage(navController = navController)
+            }
+            composable(route = Screen.ImportTripScreen.route){
+                ImportTripPage(navController = navController)
+            }
+            composable(route = Screen.CreateTripScreen.route){
+                CreateTripPage(navController = navController)
+            }
+            composable(route = Screen.PointScreen.route){
+                PointPage(navController = navController)
+            }
+        }
+        composable(route = Screen.AddPointScreen.route){
+            AddPointPage(navController = navController)
+        }
+        composable(route = Screen.ProfileScreen.route) {
+            ProfilePage(navController = navController)
         }
        /*navigation(
             startDestination = "picture_screen",
