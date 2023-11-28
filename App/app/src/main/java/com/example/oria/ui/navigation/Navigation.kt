@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
 import com.example.oria.ui.view.auth.RegisterPage
@@ -19,6 +20,7 @@ import com.example.oria.ui.view.parameters.AccountPage
 import com.example.oria.ui.view.parameters.ParametersPage
 import com.example.oria.ui.view.parameters.ProfilePage
 import com.example.oria.ui.view.trip.AddPointPage
+import com.example.oria.ui.view.trip.CameraPage
 import com.example.oria.ui.view.trip.CreateTripPage
 import com.example.oria.ui.view.trip.CurrentTripPage
 import com.example.oria.ui.view.trip.GalleryPage
@@ -84,10 +86,17 @@ fun NavigationGraph(ctx: Context) {
             composable(route = Screen.PointScreen.route){
                 PointPage(navController = navController)
             }
+            composable(route = Screen.CameraScreen.route){
+                val viewModel = it.sharedViewModel<CameraViewModel>(navController)
+                CameraPage(navController = navController, viewModel = viewModel)
+            }
+            composable(route = Screen.AddPointScreen.route){
+                val viewModel = it.sharedViewModel<CameraViewModel>(navController)
+                viewModel.navController = navController
+                AddPointPage(navController = navController, viewModel = viewModel)
+            }
         }
-        composable(route = Screen.AddPointScreen.route){
-            AddPointPage(navController = navController)
-        }
+
         composable(route = Screen.ProfileScreen.route) {
             ProfilePage(navController = navController)
         }

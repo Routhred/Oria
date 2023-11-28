@@ -21,6 +21,7 @@ sealed class Screen(val route: String) {
     object AddPointScreen : Screen("addPoint")
     object CurrentTripScreen : Screen("currentTrip")
     object PointScreen : Screen("point")
+    object CameraScreen : Screen("camera")
 }
 
 @Composable

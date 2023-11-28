@@ -28,13 +28,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oria.R
+import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.ui.view.parameters.button
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointPage(navController: NavController){
+fun PointPage(
+    navController: NavController
+){
     val screen = rememberInfoScreen()
     Image(
         painter = painterResource(R.drawable.logo_round),

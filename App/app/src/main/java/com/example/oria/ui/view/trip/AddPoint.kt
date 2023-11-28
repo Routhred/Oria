@@ -24,16 +24,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.oria.R
+import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.view.parameters.button
 
 @Composable
-fun AddPointPage(navController: NavController){
+fun AddPointPage(
+    navController: NavController,
+    viewModel: CameraViewModel){
     val screen = rememberInfoScreen()
     Column (
         verticalArrangement = Arrangement.spacedBy(screen.getDpHeight(0.5f)),
@@ -49,25 +53,28 @@ fun AddPointPage(navController: NavController){
         Box(
             modifier = Modifier
                 .clickable {
-                    // TODO open camera
+                    navController.navigate("camera")
                 }
                 .width(screen.getDpWidth(7))
-                .height(screen.getDpHeight(5))
+                .height(screen.getDpHeight(4))
                 .background(
-                    color = MaterialTheme.colorScheme.tertiary,
-                    shape = RoundedCornerShape(size = 15.dp))
+                    color = when(viewModel.photoTaken()){
+                        true -> MaterialTheme.colorScheme.background
+                        else -> MaterialTheme.colorScheme.tertiary
+                    },
+            shape = RoundedCornerShape(size = 15.dp)),
+            contentAlignment = Alignment.Center
         ){
             var isImage by remember{
                 mutableStateOf(false)
             }
-            if(isImage) {
+            val bitmap = viewModel.getBitmap()
+            println(viewModel.photoTaken())
+            if(bitmap != null) {
                 Image(
-                    painter = painterResource(R.drawable.ic_launcher_background),
+                    bitmap.asImageBitmap(),
                     contentDescription = "Profile picture",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(screen.getDpHeight(4))
-                        .clip(CircleShape)
+                    modifier = Modifier.fillMaxSize()
                 )
             }else{
                 Text(text = "Click to take a photo")
@@ -79,15 +86,25 @@ fun AddPointPage(navController: NavController){
         var description by remember {
             mutableStateOf("")
         }
+        var errorText by remember { mutableStateOf("") }
+        var isError by remember { mutableStateOf(false) }
         OutlinedTextField(
             value = name,
             label = { Text(text = "Name") },
             onValueChange = { text -> name = text },
             modifier = Modifier
                 .width(screen.getDpWidth(7))
-                .height(screen.getDpHeight(1.5f)),
+                .height(screen.getDpHeight(2)),
             singleLine = true,
+            isError = isError
         )
+        if(isError){
+            Text(
+                text = errorText,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
         OutlinedTextField(
             value = description,
             label = { Text(text = "Description") },
@@ -111,8 +128,14 @@ fun AddPointPage(navController: NavController){
             text = "Save",
             height = 2,
             onClick = {
-                // TODO Save new Point
-                navController.popBackStack()
+                if(name == ""){
+                    errorText = "This field can't be empty"
+                    isError = true
+                }else{
+                    // TODO Save new point
+                    navController.popBackStack()
+                }
+
             }
         )
         button(
@@ -127,3 +150,5 @@ fun AddPointPage(navController: NavController){
         )
     }
 }
+
+
