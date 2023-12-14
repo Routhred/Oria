@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,15 +27,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oria.R
-import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
-import com.example.oria.ui.view.parameters.button
+import com.example.oria.ui.view.settings.button
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointPage(
-    navController: NavController
+    navController: NavController,
+
 ){
     val screen = rememberInfoScreen()
     Image(

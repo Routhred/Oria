@@ -1,5 +1,6 @@
 package com.example.oria.ui.view.trip
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,26 +18,37 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
-import com.example.oria.ui.view.parameters.button
+import com.example.oria.ui.view.settings.button
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.backend.data.storage.StoreData
+import com.example.oria.viewModel.database.TripEntryViewModel
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTripPage(navController: NavController){
+fun CreateTripPage(
+    navController: NavController,
+    viewModel: TripEntryViewModel = viewModel(factory = AppViewModelProvider.TripFactory)
+){
+    val coroutineScope = rememberCoroutineScope()
     val screen = rememberInfoScreen()
     Box(
         modifier = Modifier
@@ -88,48 +100,50 @@ fun CreateTripPage(navController: NavController){
                             screen.getDpHeight(0.5f),
                             Alignment.Top),
                     ) {
-
-                        var name by remember {
-                            mutableStateOf("")
-                        }
-                        var description by remember {
-                            mutableStateOf("")
-                        }
-                        var place by remember {
-                            mutableStateOf("")
-                        }
                         var day by remember{
-                            mutableStateOf("")
+                            mutableIntStateOf(1)
                         }
                         var month by remember{
-                            mutableStateOf("")
+                            mutableIntStateOf(1)
                         }
                         var year by remember{
-                        mutableStateOf("")
+                        mutableIntStateOf(2000)
                     }
 
                         OutlinedTextField(
-                            value = name,
+                            value = viewModel.tripUiState.tripDetails.name,
                             label = { Text(text = "Name") },
-                            onValueChange = { text -> name = text },
+                            onValueChange = {
+                                viewModel.updateUiState(
+                                    viewModel.tripUiState.tripDetails.copy(name = it)
+                                )
+                            },
                             modifier = Modifier
                                 .width(320.dp)
                                 .height(73.dp),
                             singleLine = true,
                         )
                         OutlinedTextField(
-                            value = description,
+                            value = viewModel.tripUiState.tripDetails.description,
                             label = { Text(text = "Description") },
-                            onValueChange = { text -> description = text },
+                            onValueChange = {
+                                viewModel.updateUiState(
+                                    viewModel.tripUiState.tripDetails.copy(description = it)
+                                )
+                            },
                             modifier = Modifier
                                 .width(320.dp)
                                 .height(73.dp),
                             singleLine = true,
                         )
                         OutlinedTextField(
-                            value = place,
+                            value = viewModel.tripUiState.tripDetails.location,
                             label = { Text(text = "Place") },
-                            onValueChange = { text -> place = text },
+                            onValueChange = {
+                                viewModel.updateUiState(
+                                    viewModel.tripUiState.tripDetails.copy(location = it)
+                                )
+                            },
                             modifier = Modifier
                                 .width(320.dp)
                                 .height(73.dp),
@@ -141,27 +155,45 @@ fun CreateTripPage(navController: NavController){
                                 .Start)
                         ) {
                             OutlinedTextField(
-                                value = day,
-                                label = { Text(text = "Day") },
-                                onValueChange = { text -> day = text },
+                                value = day.toString(),
+                                label = {Text(text = "Day") },
+                                onValueChange = { text ->
+                                    day = if(text.toIntOrNull() == null){
+                                        0
+                                    }else{
+                                        text.toInt()
+                                    }
+                                                                      },
                                 modifier = Modifier
                                     .width(screen.getDpWidth(2))
                                     .height(screen.getDpWidth(2)),
                                 singleLine = true,
                                 )
                             OutlinedTextField(
-                                value = month,
+                                value = month.toString(),
                                 label = { Text(text = "Month") },
-                                onValueChange = { text -> month = text },
+                                onValueChange = { text -> month =
+                                    if(text.toIntOrNull() == null){
+                                    0
+                                    }else{
+                                        text.toInt()
+                                    }
+                                },
                                 modifier = Modifier
                                     .width(screen.getDpWidth(2))
                                     .height(screen.getDpWidth(2)),
                                 singleLine = true,
                             )
                             OutlinedTextField(
-                                value = year,
+                                value = year.toString(),
                                 label = { Text(text = "Year") },
-                                onValueChange = { text -> year = text },
+                                onValueChange = { text -> year =
+                                    if(text.toIntOrNull() == null){
+                                        0
+                                    }else{
+                                        text.toInt()
+                                    }
+                                },
                                 modifier = Modifier
                                     .width(screen.getDpWidth(2))
                                     .height(screen.getDpWidth(2)),
@@ -178,7 +210,18 @@ fun CreateTripPage(navController: NavController){
                                 navController = navController,
                                 text = "Save",
                                 height = 2,
-                                width = 3
+                                width = 3,
+                                enable = viewModel.tripUiState.isEntryValid,
+                                onClick = {
+                                    viewModel.updateUiState(
+                                        viewModel.tripUiState.tripDetails.copy(date = "$year-$month-$day")
+                                    )
+                                    coroutineScope.launch{
+                                        val currentTripId = viewModel.saveItem()
+                                        Log.i("Save current trip id", currentTripId.toString())
+                                        navController.popBackStack()
+                                    }
+                                }
                             )
                             button(
                                 screen = screen,

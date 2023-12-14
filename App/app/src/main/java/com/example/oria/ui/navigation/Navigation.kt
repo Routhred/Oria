@@ -1,6 +1,7 @@
 package com.example.oria.ui.navigation
 
 import android.content.Context
+import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
@@ -16,9 +17,9 @@ import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
 import com.example.oria.ui.view.auth.RegisterPage
 import com.example.oria.ui.view.HomePage
-import com.example.oria.ui.view.parameters.AccountPage
-import com.example.oria.ui.view.parameters.ParametersPage
-import com.example.oria.ui.view.parameters.ProfilePage
+import com.example.oria.ui.view.settings.AccountPage
+import com.example.oria.ui.view.settings.SettingsPage
+import com.example.oria.ui.view.settings.ProfilePage
 import com.example.oria.ui.view.trip.AddPointPage
 import com.example.oria.ui.view.trip.CameraPage
 import com.example.oria.ui.view.trip.CreateTripPage
@@ -28,7 +29,9 @@ import com.example.oria.ui.view.trip.ImportTripPage
 import com.example.oria.ui.view.trip.PointPage
 
 @Composable
-fun NavigationGraph(ctx: Context) {
+fun NavigationGraph(
+    ctx: Context,
+) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "auth") {
         navigation(
@@ -58,11 +61,11 @@ fun NavigationGraph(ctx: Context) {
 
         }
         navigation(
-            startDestination = "parameters",
-            route = "params"
+            startDestination = "settings_screen",
+            route = "settings"
         ){
-            composable(route = Screen.ParametersScreen.route) {
-                ParametersPage(navController = navController)
+            composable(route = Screen.SettingsScreen.route) {
+                SettingsPage(navController = navController)
             }
 
             composable(route = Screen.AccountScreen.route) {
@@ -74,6 +77,9 @@ fun NavigationGraph(ctx: Context) {
             startDestination = "gallery",
             route = "trip"
         ){
+            composable(route = Screen.CurrentTripScreen.route){
+                CurrentTripPage(navController = navController)
+            }
             composable(route = Screen.GalleryScreen.route){
                 GalleryPage(navController = navController)
             }
@@ -93,7 +99,7 @@ fun NavigationGraph(ctx: Context) {
             composable(route = Screen.AddPointScreen.route){
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
                 viewModel.navController = navController
-                AddPointPage(navController = navController, viewModel = viewModel)
+                AddPointPage(navController = navController, cameraViewModel = viewModel)
             }
         }
 

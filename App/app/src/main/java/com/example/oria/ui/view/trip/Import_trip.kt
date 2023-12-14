@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
-import com.example.oria.ui.view.parameters.button
+import com.example.oria.ui.view.settings.button
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

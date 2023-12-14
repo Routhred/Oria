@@ -1,13 +1,11 @@
 package com.example.oria.ui.view
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -17,39 +15,56 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.backend.data.storage.StoreData
 import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
+import com.example.oria.viewModel.HomeViewModel
 
+
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun HomePage(navController: NavController) {
+fun HomePage(
+    navController: NavController,
+    homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.TripFactory)
+) {
+
     val screen = rememberInfoScreen()
+    val currentTripName = homeViewModel.uiState.collectAsState().value.trip.name
+    Log.d("currentTripName", currentTripName)
+    Log.d("Test getcurrentTripID", homeViewModel.getCurrentTripID().toString())
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
             screen.getDpHeight(),
             Alignment.Top,
         ),
-        modifier = androidx.compose.ui.Modifier
+        modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(vertical = screen.getDpHeight()),
     ) {
-        currentTrip(screen = screen, navController = navController)
+        currentTrip(screen = screen, navController = navController, text = homeViewModel.uiState
+            .value.trip.name)
         tripGallery(screen = screen, navController)
         addPoint(screen = screen, navController = navController)
         profile(screen = screen, navController = navController)
-        parameters(screen = screen, navController = navController)
+        settings(screen = screen, navController = navController)
     }
 }
 
 @Composable
-fun currentTrip(screen: ScreenInfo, navController: NavController) {
+fun currentTrip(screen: ScreenInfo, navController: NavController, text: String = "No Current " +
+        "Trip") {
+
     Button(
         modifier = Modifier
             .width(screen.getDpWidth(7))
@@ -60,7 +75,7 @@ fun currentTrip(screen: ScreenInfo, navController: NavController) {
             navController.navigate("currentTrip")
         }
     ) {
-        Text(text = "Current trip")
+        Text(text = text)
     }
 }
 
@@ -113,7 +128,7 @@ fun profile(screen: ScreenInfo, navController: NavController) {
 }
 
 @Composable
-fun parameters(screen: ScreenInfo, navController: NavController) {
+fun settings(screen: ScreenInfo, navController: NavController) {
     Button(
         modifier = Modifier
             .width(screen.getDpWidth(7))
@@ -121,10 +136,10 @@ fun parameters(screen: ScreenInfo, navController: NavController) {
         shape = RoundedCornerShape(size = 15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
         onClick = {
-            navController.navigate("params")
+            navController.navigate("settings")
         }
     ) {
-        Text(text = "Parameters")
+        Text(text = "Settings")
     }
 }
 

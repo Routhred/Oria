@@ -13,21 +13,14 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.oria.backend.data.remote.dto.PostResponse
 import com.example.oria.backend.ext.hasRequiredPermission
-import com.example.oria.backend.server.HttpRoutes
 import com.example.oria.ui.theme.OriaTheme
 import com.example.oria.ui.navigation.NavigationGraph
+import com.example.oria.viewModel.OriaViewModel
 import com.example.oria.viewModel.SplashViewModel
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.URLProtocol
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
-
 
     companion object {
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -38,6 +31,20 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     }
+
+
+
+    /*private val viewModel by viewModels<TripViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return TripViewModel(db.dao) as T
+                }
+            }
+        }
+    )*/
+
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +60,8 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             OriaTheme {
-                runBlocking{
+
+                /* runBlocking{
                     val client = HttpClient()
                     val response: HttpResponse = client.get {
                         url {
@@ -66,8 +74,8 @@ class MainActivity : ComponentActivity() {
                     }
                     println(response.content)
                     client.close()
-                }
-                NavigationGraph(this)
+                }*/
+                NavigationGraph(this, /*tripViewModel = viewModel*/)
             }
         }
     }

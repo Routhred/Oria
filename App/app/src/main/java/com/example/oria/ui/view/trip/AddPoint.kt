@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -20,25 +18,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.oria.R
 import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.ui.navigation.rememberInfoScreen
-import com.example.oria.ui.view.parameters.button
+import com.example.oria.ui.view.settings.button
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.viewModel.database.PointEntryViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddPointPage(
     navController: NavController,
-    viewModel: CameraViewModel){
+    cameraViewModel: CameraViewModel,
+    databaseViewModel: PointEntryViewModel = viewModel(factory = AppViewModelProvider.PointFactory)
+){
     val screen = rememberInfoScreen()
+    val coroutine = rememberCoroutineScope()
     Column (
         verticalArrangement = Arrangement.spacedBy(screen.getDpHeight(0.5f)),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,7 +60,7 @@ fun AddPointPage(
                 .width(screen.getDpWidth(7))
                 .height(screen.getDpHeight(4))
                 .background(
-                    color = when(viewModel.photoTaken()){
+                    color = when(cameraViewModel.photoTaken()){
                         true -> MaterialTheme.colorScheme.background
                         else -> MaterialTheme.colorScheme.tertiary
                     },
@@ -68,8 +70,8 @@ fun AddPointPage(
             var isImage by remember{
                 mutableStateOf(false)
             }
-            val bitmap = viewModel.getBitmap()
-            println(viewModel.photoTaken())
+            val bitmap = cameraViewModel.getBitmap()
+            println(cameraViewModel.photoTaken())
             if(bitmap != null) {
                 Image(
                     bitmap.asImageBitmap(),
@@ -80,18 +82,15 @@ fun AddPointPage(
                 Text(text = "Click to take a photo")
             }
         }
-        var name by remember {
-            mutableStateOf("")
-        }
-        var description by remember {
-            mutableStateOf("")
-        }
         var errorText by remember { mutableStateOf("") }
         var isError by remember { mutableStateOf(false) }
         OutlinedTextField(
-            value = name,
+            value = databaseViewModel.pointUiState.pointDetails.name,
             label = { Text(text = "Name") },
-            onValueChange = { text -> name = text },
+            onValueChange = { text ->
+                databaseViewModel.updateUiState(
+                    databaseViewModel.pointUiState.pointDetails.copy(name = text)
+                )},
             modifier = Modifier
                 .width(screen.getDpWidth(7))
                 .height(screen.getDpHeight(2)),
@@ -106,9 +105,12 @@ fun AddPointPage(
         }
 
         OutlinedTextField(
-            value = description,
+            value = databaseViewModel.pointUiState.pointDetails.description,
             label = { Text(text = "Description") },
-            onValueChange = { text -> description = text },
+            onValueChange = { text ->
+                databaseViewModel.updateUiState(
+                    databaseViewModel.pointUiState.pointDetails.copy(description = text)
+                )},
             modifier = Modifier
                 .width(screen.getDpWidth(7))
                 .height(screen.getDpHeight(4))
@@ -128,13 +130,15 @@ fun AddPointPage(
             text = "Save",
             height = 2,
             onClick = {
-                if(name == ""){
-                    errorText = "This field can't be empty"
-                    isError = true
-                }else{
-                    // TODO Save new point
+                databaseViewModel.updateUiState(
+                    databaseViewModel.pointUiState.pointDetails.copy(tripCode = 10)
+                )
+                coroutine.launch{
+                    databaseViewModel.saveItem()
                     navController.popBackStack()
                 }
+
+
 
             }
         )

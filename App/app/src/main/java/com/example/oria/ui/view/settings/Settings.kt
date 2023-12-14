@@ -1,4 +1,4 @@
-package com.example.oria.ui.view.parameters
+package com.example.oria.ui.view.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
 
 @Composable
-fun ParametersPage(navController: NavController) {
+fun SettingsPage(navController: NavController) {
     val screen = rememberInfoScreen()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -67,14 +67,16 @@ fun button(
     height: Int = 4,
     width: Int = 7,
     onClick: () -> Unit = {navController.navigate("main")},
-    color: Color = MaterialTheme.colorScheme.tertiary) {
+    color: Color = MaterialTheme.colorScheme.tertiary,
+    enable: Boolean = true) {
     Button(
         modifier = Modifier
             .width(screen.getDpWidth(width))
             .height(screen.getDpHeight(height)),
         shape = RoundedCornerShape(size = 15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = color),
-        onClick = onClick
+        onClick = onClick,
+        enabled = enable
     ) {
         Text(text = text)
     }
