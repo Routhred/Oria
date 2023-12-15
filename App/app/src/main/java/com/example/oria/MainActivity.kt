@@ -16,7 +16,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.oria.backend.ext.hasRequiredPermission
 import com.example.oria.ui.theme.OriaTheme
 import com.example.oria.ui.navigation.NavigationGraph
-import com.example.oria.viewModel.OriaViewModel
 import com.example.oria.viewModel.SplashViewModel
 
 class MainActivity : ComponentActivity() {
@@ -31,18 +30,6 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     }
-
-
-
-    /*private val viewModel by viewModels<TripViewModel>(
-        factoryProducer = {
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TripViewModel(db.dao) as T
-                }
-            }
-        }
-    )*/
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

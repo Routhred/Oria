@@ -5,15 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.oria.backend.data.storage.StoreData
 import com.example.oria.backend.data.storage.trip.Trip
 import com.example.oria.backend.data.storage.trip.TripRepository
-import kotlinx.coroutines.launch
+import com.example.oria.viewModel.CurrentTrip
 
 class TripEntryViewModel (
-    private val tripsRepository: TripRepository,
-    private val data: StoreData
+    private val tripsRepository: TripRepository
 ): ViewModel(){
 
     var tripUiState by mutableStateOf(TripUiState())
@@ -45,9 +42,8 @@ class TripEntryViewModel (
     }
 
     private fun changeCurrentTripId(id: Int){
-        viewModelScope.launch{
-            data.saveCurrentTripId(id)
-        }
+        val currentTrip = CurrentTrip.getInstance()
+        currentTrip.updateCurrentTripCode(id)
     }
 
     private fun validateInput(uiState: TripDetails = tripUiState.tripDetails): Boolean{

@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
@@ -33,7 +35,10 @@ fun NavigationGraph(
     ctx: Context,
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "auth") {
+    NavHost(
+        navController = navController,
+        startDestination = "auth"
+    ) {
         navigation(
             startDestination = "login",
             route = "auth",
@@ -77,8 +82,11 @@ fun NavigationGraph(
             startDestination = "gallery",
             route = "trip"
         ){
-            composable(route = Screen.CurrentTripScreen.route){
-                CurrentTripPage(navController = navController)
+            composable(
+                route = "${Screen.CurrentTripScreen.route}/{tripId}",
+                arguments = listOf(navArgument("tripId"){type = NavType.IntType})
+            ){
+                CurrentTripPage(navController = navController, it.arguments?.getInt("tripId"))
             }
             composable(route = Screen.GalleryScreen.route){
                 GalleryPage(navController = navController)
@@ -96,10 +104,16 @@ fun NavigationGraph(
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
                 CameraPage(navController = navController, viewModel = viewModel)
             }
-            composable(route = Screen.AddPointScreen.route){
+            composable(
+                route = "${Screen.AddPointScreen.route}/{tripId}",
+                arguments = listOf(navArgument("tripId"){type = NavType.IntType})
+            ){
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
                 viewModel.navController = navController
-                AddPointPage(navController = navController, cameraViewModel = viewModel)
+                AddPointPage(
+                    navController = navController,
+                    cameraViewModel = viewModel,
+                    tripId = it.arguments?.getInt("tripId"))
             }
         }
 

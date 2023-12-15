@@ -25,16 +25,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.R
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.ui.view.settings.button
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.viewModel.trip.GalleryViewModel
+import com.example.oria.viewModel.trip.PointViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointPage(
-    navController: NavController,
+    navController: NavController
 
 ){
     val screen = rememberInfoScreen()

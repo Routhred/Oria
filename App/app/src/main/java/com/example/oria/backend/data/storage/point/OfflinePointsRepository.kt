@@ -6,6 +6,7 @@ class OfflinePointsRepository(private val pointDao: PointDao) : PointRepository 
     override fun getAllPointsStream(): Flow<List<Point>> = pointDao.getAllPoints()
 
     override fun getPointStream(id: Int): Flow<Point?> = pointDao.getPoint(id)
+    override fun getTripPoints(tripCode: Int): Flow<List<Point>> = pointDao.getTripPoints(tripCode)
 
     override suspend fun insertPoint(item: Point) = pointDao.createPoint(item)
 

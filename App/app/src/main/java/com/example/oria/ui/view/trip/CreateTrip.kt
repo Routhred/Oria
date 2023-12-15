@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,7 +36,6 @@ import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.ui.view.settings.button
 import com.example.oria.viewModel.AppViewModelProvider
-import com.example.oria.backend.data.storage.StoreData
 import com.example.oria.viewModel.database.TripEntryViewModel
 import kotlinx.coroutines.launch
 

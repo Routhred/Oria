@@ -38,7 +38,10 @@ fun GalleryPage(
 
     ){
         button(
-            screen = screen, navController = navController, text = "Create a new trip",
+            screen = screen,
+            navController = navController,
+            height = 1,
+            text = "Create a new trip",
             onClick = {
                 navController.navigate("createTrip")
             }
@@ -58,9 +61,11 @@ fun GalleryPage(
         ) {
             items(galleryUiState.tripList){trip ->
                 button(
-                    screen = screen, navController = navController, text = trip.name,
+                    screen = screen,
+                    navController = navController,
+                    text = trip.name,
                     onClick = {
-                        navController.navigate("currentTrip")
+                        navController.navigate("currentTrip/${trip.id}")
                     }
                 )
             }

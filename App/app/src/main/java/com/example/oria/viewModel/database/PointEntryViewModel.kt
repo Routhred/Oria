@@ -3,12 +3,18 @@ package com.example.oria.viewModel.database
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.oria.backend.data.storage.point.Point
 import com.example.oria.backend.data.storage.point.PointRepository
 
-class PointEntryViewModel (private val pointsRepository: PointRepository): ViewModel(){
+class PointEntryViewModel (
+    savedStateHandle: SavedStateHandle,
+    private val pointsRepository: PointRepository
+):
+    ViewModel(){
 
+    private val tripId: Int = checkNotNull(savedStateHandle["tripId"])
     var pointUiState by mutableStateOf(PointUiState())
         private set
 
@@ -21,16 +27,20 @@ class PointEntryViewModel (private val pointsRepository: PointRepository): ViewM
 
     suspend fun saveItem(){
         if(validateInput()){
+            updateUiState(
+                pointUiState.pointDetails.copy(tripCode = tripId)
+            )
             pointsRepository.insertPoint(pointUiState.pointDetails.toPoint())
         }
     }
 
     private fun validateInput(uiState: PointDetails = pointUiState.pointDetails): Boolean{
-        return with(uiState){
+        return uiState.name.isNotBlank()
+        /*return with(uiState){
             name.isNotBlank() &&
             location.isNotBlank() &&
             description.isNotBlank()
-        }
+        }*/
     }
 
 }

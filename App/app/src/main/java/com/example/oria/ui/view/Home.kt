@@ -16,14 +16,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.viewModel.AppViewModelProvider
-import com.example.oria.backend.data.storage.StoreData
 import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.viewModel.HomeViewModel
@@ -36,10 +35,13 @@ fun HomePage(
     homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.TripFactory)
 ) {
 
+    val homeUiState by homeViewModel.homeUiState.collectAsState()
+    val currentTripId = homeUiState.currentTrip.id
+    val currentTripName = homeUiState.currentTrip.name
+
     val screen = rememberInfoScreen()
-    val currentTripName = homeViewModel.uiState.collectAsState().value.trip.name
     Log.d("currentTripName", currentTripName)
-    Log.d("Test getcurrentTripID", homeViewModel.getCurrentTripID().toString())
+    Log.d("Test getcurrentTripID", currentTripId.toString())
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,18 +54,25 @@ fun HomePage(
             .fillMaxSize()
             .padding(vertical = screen.getDpHeight()),
     ) {
-        currentTrip(screen = screen, navController = navController, text = homeViewModel.uiState
-            .value.trip.name)
+        currentTrip(
+            screen = screen,
+            navController = navController,
+            text = currentTripName,
+            tripId = currentTripId)
         tripGallery(screen = screen, navController)
-        addPoint(screen = screen, navController = navController)
+        addPoint(screen = screen, navController = navController, currentTripId)
         profile(screen = screen, navController = navController)
         settings(screen = screen, navController = navController)
     }
 }
 
 @Composable
-fun currentTrip(screen: ScreenInfo, navController: NavController, text: String = "No Current " +
-        "Trip") {
+fun currentTrip(
+    screen: ScreenInfo,
+    navController: NavController,
+    text: String = "No Current Trip",
+    tripId: Int = 0
+) {
 
     Button(
         modifier = Modifier
@@ -72,7 +81,7 @@ fun currentTrip(screen: ScreenInfo, navController: NavController, text: String =
         shape = RoundedCornerShape(size = 15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
         onClick = {
-            navController.navigate("currentTrip")
+            navController.navigate("currentTrip/${tripId}")
         }
     ) {
         Text(text = text)
@@ -96,7 +105,7 @@ fun tripGallery(screen: ScreenInfo, navController: NavController) {
 }
 
 @Composable
-fun addPoint(screen: ScreenInfo, navController: NavController) {
+fun addPoint(screen: ScreenInfo, navController: NavController, tripId: Int) {
     Button(
         modifier = Modifier
             .width(screen.getDpWidth(7))
@@ -104,7 +113,7 @@ fun addPoint(screen: ScreenInfo, navController: NavController) {
         shape = RoundedCornerShape(size = 15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
         onClick = {
-            navController.navigate("addPoint")
+            navController.navigate("addPoint/${tripId}")
         }
     ) {
         Text(text = "Add Point")

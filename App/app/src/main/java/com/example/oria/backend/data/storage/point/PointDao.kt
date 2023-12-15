@@ -23,4 +23,7 @@ interface PointDao {
     fun getAllPoints(): Flow<List<Point>>
     @Query("SELECT * from points WHERE id = :id")
     fun getPoint(id: Int): Flow<Point>
+
+    @Query("SELECT * from points WHERE tripCode = :tripCode")
+    fun getTripPoints(tripCode: Int): Flow<List<Point>>
 }

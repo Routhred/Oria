@@ -37,7 +37,8 @@ import kotlinx.coroutines.launch
 fun AddPointPage(
     navController: NavController,
     cameraViewModel: CameraViewModel,
-    databaseViewModel: PointEntryViewModel = viewModel(factory = AppViewModelProvider.PointFactory)
+    viewModel: PointEntryViewModel = viewModel(factory = AppViewModelProvider.PointFactory),
+    tripId: Int? = 0
 ){
     val screen = rememberInfoScreen()
     val coroutine = rememberCoroutineScope()
@@ -85,11 +86,11 @@ fun AddPointPage(
         var errorText by remember { mutableStateOf("") }
         var isError by remember { mutableStateOf(false) }
         OutlinedTextField(
-            value = databaseViewModel.pointUiState.pointDetails.name,
+            value = viewModel.pointUiState.pointDetails.name,
             label = { Text(text = "Name") },
             onValueChange = { text ->
-                databaseViewModel.updateUiState(
-                    databaseViewModel.pointUiState.pointDetails.copy(name = text)
+                viewModel.updateUiState(
+                    viewModel.pointUiState.pointDetails.copy(name = text)
                 )},
             modifier = Modifier
                 .width(screen.getDpWidth(7))
@@ -105,11 +106,11 @@ fun AddPointPage(
         }
 
         OutlinedTextField(
-            value = databaseViewModel.pointUiState.pointDetails.description,
+            value = viewModel.pointUiState.pointDetails.description,
             label = { Text(text = "Description") },
             onValueChange = { text ->
-                databaseViewModel.updateUiState(
-                    databaseViewModel.pointUiState.pointDetails.copy(description = text)
+                viewModel.updateUiState(
+                    viewModel.pointUiState.pointDetails.copy(description = text)
                 )},
             modifier = Modifier
                 .width(screen.getDpWidth(7))
@@ -130,11 +131,8 @@ fun AddPointPage(
             text = "Save",
             height = 2,
             onClick = {
-                databaseViewModel.updateUiState(
-                    databaseViewModel.pointUiState.pointDetails.copy(tripCode = 10)
-                )
                 coroutine.launch{
-                    databaseViewModel.saveItem()
+                    viewModel.saveItem()
                     navController.popBackStack()
                 }
 

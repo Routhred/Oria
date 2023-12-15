@@ -2,9 +2,9 @@ package com.example.oria.viewModel.trip
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oria.TIMEOUT_MILLIS
 import com.example.oria.backend.data.storage.trip.Trip
 import com.example.oria.backend.data.storage.trip.TripRepository
-import com.example.oria.viewModel.OriaViewModel.Companion.TIMEOUT_MILLIS
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

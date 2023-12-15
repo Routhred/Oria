@@ -23,4 +23,7 @@ interface TripDao {
     fun getAllTrips(): Flow<List<Trip>>
     @Query("SELECT * from trips WHERE id = :id")
     fun getTrip(id: Int): Flow<Trip>
+
+    @Query("SELECT * from trips WHERE id = (SELECT MAX(id) from trips)")
+    fun getLastTrip(): Flow<Trip>
 }
