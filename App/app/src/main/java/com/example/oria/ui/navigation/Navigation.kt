@@ -97,7 +97,8 @@ fun NavigationGraph(
             composable(route = Screen.CreateTripScreen.route){
                 CreateTripPage(navController = navController)
             }
-            composable(route = Screen.PointScreen.route){
+            composable(route = "${Screen.PointScreen.route}/{pointId}",
+                arguments = listOf(navArgument("pointId"){type = NavType.IntType})){
                 PointPage(navController = navController)
             }
             composable(route = Screen.CameraScreen.route){

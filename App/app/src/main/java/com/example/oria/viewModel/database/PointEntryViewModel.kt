@@ -7,6 +7,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.oria.backend.data.storage.point.Point
 import com.example.oria.backend.data.storage.point.PointRepository
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.logging.SimpleFormatter
 
 class PointEntryViewModel (
     savedStateHandle: SavedStateHandle,
@@ -41,6 +45,12 @@ class PointEntryViewModel (
             location.isNotBlank() &&
             description.isNotBlank()
         }*/
+    }
+
+    fun getImageName(): String{
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
+        val date = LocalDateTime.now().format(formatter)
+        return "ORIA_${pointUiState.pointDetails.name}_${tripId}_${date}"
     }
 
 }

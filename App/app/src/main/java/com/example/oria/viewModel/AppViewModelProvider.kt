@@ -10,6 +10,7 @@ import com.example.oria.OriaApplication
 import com.example.oria.viewModel.database.PointEntryViewModel
 import com.example.oria.viewModel.database.TripEntryViewModel
 import com.example.oria.viewModel.trip.GalleryViewModel
+import com.example.oria.viewModel.trip.PointViewModel
 import com.example.oria.viewModel.trip.TripViewModel
 
 
@@ -39,6 +40,12 @@ object AppViewModelProvider {
     val PointFactory = viewModelFactory {
         initializer {
             PointEntryViewModel(
+                this.createSavedStateHandle(),
+                oriaApplication().container.pointsRepository
+            )
+        }
+        initializer {
+            PointViewModel(
                 this.createSavedStateHandle(),
                 oriaApplication().container.pointsRepository
             )

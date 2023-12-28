@@ -1,5 +1,9 @@
 package com.example.oria.ui.view.auth
 
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +40,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.oria.MainActivity
 import com.example.oria.backend.ext.hasRequiredPermission
+import com.example.oria.backend.location.LocationService
 import com.example.oria.backend.server.HttpService
 import com.example.oria.backend.server.HttpRoutes
 import com.example.oria.permission.PermissionDialog
@@ -46,6 +51,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.URLProtocol
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "pLogin")
 @Composable
@@ -158,7 +164,7 @@ fun LoginPage(navController: NavController = rememberNavController()) {
                                     .height(73.dp),
                                 singleLine = true,
                             )
-
+                            val context = LocalContext.current
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
@@ -171,15 +177,17 @@ fun LoginPage(navController: NavController = rememberNavController()) {
                                     .clickable {
                                         errorCode = TryLogin(
                                             name = name,
-                                            password =
-                                            password,
+                                            password = password,
+                                            context = context
                                         )
                                         when (errorCode) {
-                                            0 -> navController.navigate(
-                                                "main",
-                                            ) {
-                                                popUpTo("auth") {
-                                                    inclusive = true
+                                            0 -> {
+                                                navController.navigate(
+                                                    "main",
+                                                ) {
+                                                    popUpTo("auth") {
+                                                        inclusive = true
+                                                    }
                                                 }
                                             }
 
@@ -250,8 +258,15 @@ fun LoginPage(navController: NavController = rememberNavController()) {
     }
 }
 
-fun TryLogin(name: String, password: String): Int {
+fun TryLogin(name: String, password: String, context:Context): Int {
     val client = HttpClient()
-
+    launchGPS(context)
     return 0
+}
+
+fun launchGPS(context: Context){
+    Intent(context, LocationService::class.java).apply {
+        action = LocationService.ACTION_START
+        context.startService(this)
+    }
 }

@@ -16,7 +16,13 @@ class HomeViewModel(tripRepository: TripRepository) : ViewModel() {
 
     // Get the last trip insert in the database (it is the current trip)
     val homeUiState: StateFlow<HomeUiState> = tripRepository.getLastStream().map{
-        HomeUiState(it)
+        // If there is no trip in the database, we will show an empty trip
+        if(it == null){
+            HomeUiState()
+        }else{
+            HomeUiState(it)
+        }
+
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),

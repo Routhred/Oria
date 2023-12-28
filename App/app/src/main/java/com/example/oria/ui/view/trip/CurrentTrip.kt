@@ -1,5 +1,6 @@
 package com.example.oria.ui.view.trip
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -151,6 +152,7 @@ fun displayAllPoint(navController: NavController, screen: ScreenInfo, points: Po
                 text = point.name,
                 height = 2,
                 onClick = {
+                    Log.d("GOTO","point/${point.id.toString()}")
                     navController.navigate("point/${point.id}")
                 }
             )

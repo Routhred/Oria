@@ -1,6 +1,8 @@
 package com.example.oria.ui.view
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +21,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.oria.backend.location.LocationService
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
@@ -42,6 +46,7 @@ fun HomePage(
     val screen = rememberInfoScreen()
     Log.d("currentTripName", currentTripName)
     Log.d("Test getcurrentTripID", currentTripId.toString())
+    Log.d("Launch GPS", "Call to function")
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -106,6 +111,7 @@ fun tripGallery(screen: ScreenInfo, navController: NavController) {
 
 @Composable
 fun addPoint(screen: ScreenInfo, navController: NavController, tripId: Int) {
+    val context = LocalContext.current
     Button(
         modifier = Modifier
             .width(screen.getDpWidth(7))
@@ -113,6 +119,10 @@ fun addPoint(screen: ScreenInfo, navController: NavController, tripId: Int) {
         shape = RoundedCornerShape(size = 15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
         onClick = {
+            Intent(context, LocationService::class.java).apply{
+                action = LocationService.ACTION_START
+                context.startService(this)
+            }
             navController.navigate("addPoint/${tripId}")
         }
     ) {
@@ -151,4 +161,8 @@ fun settings(screen: ScreenInfo, navController: NavController) {
         Text(text = "Settings")
     }
 }
+
+
+
+
 

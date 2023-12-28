@@ -8,6 +8,7 @@ import com.example.oria.backend.data.storage.point.Point
 import com.example.oria.backend.data.storage.point.PointRepository
 import com.example.oria.backend.data.storage.trip.Trip
 import com.example.oria.backend.data.storage.trip.TripRepository
+import com.example.oria.viewModel.HomeUiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -23,7 +24,11 @@ class TripViewModel (
     private val tripId: Int = checkNotNull(savedStateHandle["tripId"])
 
     val tripUiState: StateFlow<TripUiState> = tripRepository.getTripStream(tripId).map{
-        TripUiState(it)
+        if(it == null){
+            TripUiState()
+        }else{
+            TripUiState(it)
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
