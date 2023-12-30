@@ -6,24 +6,34 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.oria.ui.theme.*
 
+/**
+ * Class to store all screen route
+ *
+ * @property route Name of the route
+ */
 sealed class Screen(val route: String) {
-    object LoginScreen : Screen("login")
-    object RegisterScreen : Screen("register")
-    object HomeScreen : Screen("home")
-    object PasswordScreen : Screen("password")
-    object SettingsScreen : Screen("settings_screen")
-    object ProfileScreen : Screen("profile")
-    object AccountScreen : Screen("account")
-    object GalleryScreen : Screen("gallery")
-
-    object ImportTripScreen : Screen("importTrip")
-    object CreateTripScreen : Screen("createTrip")
-    object AddPointScreen : Screen("addPoint")
-    object CurrentTripScreen : Screen("currentTrip")
-    object PointScreen : Screen("point")
-    object CameraScreen : Screen("camera")
+    data object LoginScreen : Screen("login")
+    data object RegisterScreen : Screen("register")
+    data object HomeScreen : Screen("home")
+    data object PasswordScreen : Screen("password")
+    data object SettingsScreen : Screen("settings_screen")
+    data object ProfileScreen : Screen("profile")
+    data object AccountScreen : Screen("account")
+    data object GalleryScreen : Screen("gallery")
+    data object ImportTripScreen : Screen("importTrip")
+    data object CreateTripScreen : Screen("createTrip")
+    data object AddPointScreen : Screen("addPoint")
+    data object CurrentTripScreen : Screen("currentTrip")
+    data object PointScreen : Screen("point")
+    data object CameraScreen : Screen("camera")
 }
 
+
+/**
+ * Function to get the info of the current screen
+ *
+ * @return the screen info as ScreenInfo
+ */
 @Composable
 fun rememberInfoScreen(): ScreenInfo {
     val configuration = LocalConfiguration.current
@@ -43,6 +53,14 @@ fun rememberInfoScreen(): ScreenInfo {
     )
 }
 
+/**
+ * Class representing the screen and his infos
+ *
+ * @property screenWidthInfo
+ * @property sceenHeightInfo
+ * @property screenWidth
+ * @property screenHeight
+ */
 data class ScreenInfo(
     val screenWidthInfo: ScreenType,
     val sceenHeightInfo: ScreenType,

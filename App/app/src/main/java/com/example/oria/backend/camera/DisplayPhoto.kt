@@ -2,7 +2,6 @@ package com.example.oria.backend.camera
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.media.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

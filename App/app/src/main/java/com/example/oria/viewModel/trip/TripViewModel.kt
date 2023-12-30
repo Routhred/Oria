@@ -3,23 +3,31 @@ package com.example.oria.viewModel.trip
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.oria.TIMEOUT_MILLIS
 import com.example.oria.backend.data.storage.point.Point
 import com.example.oria.backend.data.storage.point.PointRepository
 import com.example.oria.backend.data.storage.trip.Trip
 import com.example.oria.backend.data.storage.trip.TripRepository
-import com.example.oria.viewModel.HomeUiState
+import com.example.oria.ui.theme.TIMEOUT_MILLIS
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * ViewModel for the current trip view
+ *
+ * @constructor
+ *
+ *
+ * @param savedStateHandle
+ * @param tripRepository
+ * @param pointRepository
+ */
 class TripViewModel (
     savedStateHandle: SavedStateHandle,
     tripRepository: TripRepository,
     pointRepository: PointRepository
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val tripId: Int = checkNotNull(savedStateHandle["tripId"])
 
@@ -43,6 +51,12 @@ class TripViewModel (
     )
 
 }
+
+/**
+ * Data class for the currentTrip Ui state
+ *
+ * @property currentTrip
+ */
 data class TripUiState(
     val currentTrip: Trip = Trip()
 )

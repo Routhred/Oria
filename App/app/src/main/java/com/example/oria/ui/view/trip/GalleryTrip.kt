@@ -25,8 +25,8 @@ import com.example.oria.viewModel.trip.GalleryViewModel
 @Composable
 fun GalleryPage(
     navController: NavController,
-    viewModel: GalleryViewModel = viewModel(factory = AppViewModelProvider.TripFactory)
-){
+    viewModel: GalleryViewModel = viewModel(factory = AppViewModelProvider.factory)
+) {
     val screen = rememberInfoScreen()
     val galleryUiState by viewModel.galleryUiState.collectAsState()
     Column(
@@ -36,7 +36,7 @@ fun GalleryPage(
         verticalArrangement = Arrangement.spacedBy(screen.getDpHeight()),
         horizontalAlignment = Alignment.CenterHorizontally,
 
-    ){
+        ) {
         button(
             screen = screen,
             navController = navController,
@@ -59,7 +59,7 @@ fun GalleryPage(
                 Alignment.Top,
             ),
         ) {
-            items(galleryUiState.tripList){trip ->
+            items(galleryUiState.tripList) { trip ->
                 button(
                     screen = screen,
                     navController = navController,

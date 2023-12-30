@@ -1,4 +1,4 @@
-package com.example.oria.viewModel
+package com.example.oria.viewModel.global
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the Splash screen view
+ *
+ */
 class SplashViewModel : ViewModel() {
     private val _loading = MutableStateFlow(true)
     val loading = _loading.asStateFlow()

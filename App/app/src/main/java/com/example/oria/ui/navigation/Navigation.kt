@@ -1,7 +1,8 @@
 package com.example.oria.ui.navigation
 
 import android.content.Context
-import android.provider.Settings
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
@@ -15,13 +16,13 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.oria.backend.camera.CameraViewModel
+import com.example.oria.ui.view.HomePage
 import com.example.oria.ui.view.auth.LoginPage
 import com.example.oria.ui.view.auth.PasswordPage
 import com.example.oria.ui.view.auth.RegisterPage
-import com.example.oria.ui.view.HomePage
 import com.example.oria.ui.view.settings.AccountPage
-import com.example.oria.ui.view.settings.SettingsPage
 import com.example.oria.ui.view.settings.ProfilePage
+import com.example.oria.ui.view.settings.SettingsPage
 import com.example.oria.ui.view.trip.AddPointPage
 import com.example.oria.ui.view.trip.CameraPage
 import com.example.oria.ui.view.trip.CreateTripPage
@@ -30,6 +31,12 @@ import com.example.oria.ui.view.trip.GalleryPage
 import com.example.oria.ui.view.trip.ImportTripPage
 import com.example.oria.ui.view.trip.PointPage
 
+/**
+ * Navigation graph
+ *
+ * @param ctx context to pass to the sharedViewModel
+ */
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun NavigationGraph(
     ctx: Context,
@@ -39,6 +46,8 @@ fun NavigationGraph(
         navController = navController,
         startDestination = "auth"
     ) {
+
+        // Navigation for the flat graph authentication
         navigation(
             startDestination = "login",
             route = "auth",
@@ -53,6 +62,8 @@ fun NavigationGraph(
                 PasswordPage(navController = navController)
             }
         }
+
+        // Navigation graph for the home graph
         navigation(
             startDestination = "home",
             route = "main",
@@ -60,15 +71,17 @@ fun NavigationGraph(
             composable(route = Screen.HomeScreen.route) {
                 HomePage(navController = navController)
             }
-            composable(route = Screen.CurrentTripScreen.route){
+            composable(route = Screen.CurrentTripScreen.route) {
                 CurrentTripPage(navController = navController)
             }
 
         }
+
+        // Navigation graph for the settings graph
         navigation(
             startDestination = "settings_screen",
             route = "settings"
-        ){
+        ) {
             composable(route = Screen.SettingsScreen.route) {
                 SettingsPage(navController = navController)
             }
@@ -78,67 +91,52 @@ fun NavigationGraph(
             }
 
         }
+
+        // Navigation graph for the trip graph
         navigation(
             startDestination = "gallery",
             route = "trip"
-        ){
+        ) {
             composable(
                 route = "${Screen.CurrentTripScreen.route}/{tripId}",
-                arguments = listOf(navArgument("tripId"){type = NavType.IntType})
-            ){
+                arguments = listOf(navArgument("tripId") { type = NavType.IntType })
+            ) {
                 CurrentTripPage(navController = navController, it.arguments?.getInt("tripId"))
             }
-            composable(route = Screen.GalleryScreen.route){
+            composable(route = Screen.GalleryScreen.route) {
                 GalleryPage(navController = navController)
             }
-            composable(route = Screen.ImportTripScreen.route){
+            composable(route = Screen.ImportTripScreen.route) {
                 ImportTripPage(navController = navController)
             }
-            composable(route = Screen.CreateTripScreen.route){
+            composable(route = Screen.CreateTripScreen.route) {
                 CreateTripPage(navController = navController)
             }
             composable(route = "${Screen.PointScreen.route}/{pointId}",
-                arguments = listOf(navArgument("pointId"){type = NavType.IntType})){
+                arguments = listOf(navArgument("pointId") { type = NavType.IntType })
+            ) {
                 PointPage(navController = navController)
             }
-            composable(route = Screen.CameraScreen.route){
+            composable(route = Screen.CameraScreen.route) {
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
-                CameraPage(navController = navController, viewModel = viewModel)
+                CameraPage(viewModel = viewModel)
             }
             composable(
                 route = "${Screen.AddPointScreen.route}/{tripId}",
-                arguments = listOf(navArgument("tripId"){type = NavType.IntType})
-            ){
+                arguments = listOf(navArgument("tripId") { type = NavType.IntType })
+            ) {
                 val viewModel = it.sharedViewModel<CameraViewModel>(navController)
                 viewModel.navController = navController
                 AddPointPage(
                     navController = navController,
-                    cameraViewModel = viewModel,
-                    tripId = it.arguments?.getInt("tripId"))
+                    cameraViewModel = viewModel
+                )
             }
         }
 
         composable(route = Screen.ProfileScreen.route) {
             ProfilePage(navController = navController)
         }
-       /*navigation(
-            startDestination = "picture_screen",
-            route = "picture",
-        ) {
-            composable(route = Screen.PictureScreen.route) {
-                val viewModel = it.sharedViewModel<CameraViewModel>(navController)
-                viewModel.navController = navController
-                PicturePage(ctx, navController = navController)
-            }
-            composable(route = Screen.CameraScreen.route) {
-                val viewModel = it.sharedViewModel<CameraViewModel>(navController)
-                CameraPage(navController = navController, viewModel)
-            }
-            composable(route = Screen.PhotoScreen.route) {
-                val viewModel = it.sharedViewModel<CameraViewModel>(navController)
-                DisplayPhoto(navController = navController, viewModel)
-            }
-        }*/
     }
 }
 

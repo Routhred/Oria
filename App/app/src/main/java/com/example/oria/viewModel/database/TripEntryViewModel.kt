@@ -1,56 +1,81 @@
 package com.example.oria.viewModel.database
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.oria.backend.data.storage.trip.Trip
+import com.example.oria.backend.data.storage.trip.CurrentTrip
+import com.example.oria.backend.data.storage.trip.TripDetails
 import com.example.oria.backend.data.storage.trip.TripRepository
-import com.example.oria.viewModel.CurrentTrip
+import com.example.oria.backend.utils.DEBUG
+import com.example.oria.backend.utils.ERROR
+import com.example.oria.backend.utils.TagDebug
 
-class TripEntryViewModel (
+/**
+ * View Model for the new trip view
+ *
+ * @property tripsRepository
+ */
+class TripEntryViewModel(
     private val tripsRepository: TripRepository
-): ViewModel(){
+) : ViewModel() {
 
     var tripUiState by mutableStateOf(TripUiState())
         private set
 
-    fun updateUiState(tripDetails: TripDetails){
+    /**
+     * Update current ui state with new field
+     *
+     * @param tripDetails tripDetails with new field to update current ui state
+     */
+    fun updateUiState(tripDetails: TripDetails) {
+        DEBUG(TagDebug.CREATE_TRIP, "Update Ui State")
         tripUiState = TripUiState(
             tripDetails = tripDetails,
             isEntryValid = validateInput(tripDetails)
         )
     }
 
-    fun getUiState(fieldTrip: FieldTrip): String{
-        return when(fieldTrip){
-            FieldTrip.ID -> tripUiState.tripDetails.id.toString()
-            else -> "Nothing"
-        }
-    }
-
-    suspend fun saveItem(): Long{
-        val tripId = if(validateInput()){
+    /**
+     * Save current Ui State item to the database
+     *
+     * @return Id of the trip create in the database
+     */
+    suspend fun saveItem(): Long {
+        val tripId = if (validateInput()) {
+            DEBUG(TagDebug.CREATE_TRIP, "Insertion in the database")
             tripsRepository.insertTrip(tripUiState.tripDetails.toTrip())
-        }else{
-            Log.w("Save Trip", "Input not valid")
+        } else {
+            ERROR(TagDebug.CREATE_TRIP, "Current Ui State not valid")
             0L
         }
         changeCurrentTripId(tripId.toInt())
         return tripId
     }
 
-    private fun changeCurrentTripId(id: Int){
+    /**
+     * Change current trip id
+     *
+     * @param id
+     */
+    private fun changeCurrentTripId(id: Int) {
+        DEBUG(TagDebug.CREATE_TRIP, "Change current Trip Id")
         val currentTrip = CurrentTrip.getInstance()
         currentTrip.updateCurrentTripCode(id)
     }
 
-    private fun validateInput(uiState: TripDetails = tripUiState.tripDetails): Boolean{
-        return with(uiState){
+    /**
+     * valid the current ui state
+     *
+     * @param uiState
+     * @return if the current ui state is valid
+     */
+    private fun validateInput(uiState: TripDetails = tripUiState.tripDetails): Boolean {
+        DEBUG(TagDebug.CREATE_TRIP, "Validating Trip Ui State")
+        return with(uiState) {
             name.isNotBlank() &&
-            location.isNotBlank() &&
-            description.isNotBlank()
+                    location.isNotBlank() &&
+                    description.isNotBlank()
         }
     }
 
@@ -61,38 +86,3 @@ data class TripUiState(
     val isEntryValid: Boolean = false
 )
 
-data class TripDetails(
-    val id: Int = 0,
-    val location: String = "",
-    val name: String = "",
-    val date: String = "",
-    val description: String = "",
-    val points: String = ""
-)
-
-fun TripDetails.toTrip(): Trip = Trip(
-    id = id,
-    name = name,
-    location = location,
-    date = date,
-    description = description,
-    points = points
-)
-
-fun Trip.toTripUiState(isEntryValid: Boolean = false): TripUiState = TripUiState(
-    tripDetails = this.toTripDetails(),
-    isEntryValid = isEntryValid
-)
-
-fun Trip.toTripDetails(): TripDetails = TripDetails(
-    id = id,
-    name = name,
-    location = location,
-    date = date,
-    description = description,
-    points = points
-)
-
-enum class FieldTrip{
-    ID, NAME, LOCATION, DATE, DESCRIPTION
-}

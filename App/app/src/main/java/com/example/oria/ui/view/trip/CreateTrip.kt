@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateTripPage(
     navController: NavController,
-    viewModel: TripEntryViewModel = viewModel(factory = AppViewModelProvider.TripFactory)
+    viewModel: TripEntryViewModel = viewModel(factory = AppViewModelProvider.factory)
 ){
     val coroutineScope = rememberCoroutineScope()
     val screen = rememberInfoScreen()
@@ -216,7 +216,6 @@ fun CreateTripPage(
                                     )
                                     coroutineScope.launch{
                                         val currentTripId = viewModel.saveItem()
-                                        Log.i("Save current trip id", currentTripId.toString())
                                         navController.popBackStack()
                                     }
                                 }

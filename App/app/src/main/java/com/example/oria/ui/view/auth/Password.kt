@@ -36,7 +36,9 @@ import com.example.oria.ui.theme.loginFontFamily
 @Composable
 fun PasswordPage(navController: NavController) {
     Box(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background),
     ) {
         Column {
             Box(
@@ -46,7 +48,7 @@ fun PasswordPage(navController: NavController) {
                     .fillMaxHeight(0.3f),
                 contentAlignment = Alignment.Center,
 
-            ) {
+                ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = "WELCOME TO",
@@ -93,6 +95,7 @@ fun PasswordPage(navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(23.dp, Alignment.Top),
                     ) {
+                        // TODO Implement PasswordViewModel
                         var name by remember {
                             mutableStateOf("")
                         }
@@ -143,10 +146,10 @@ fun PasswordPage(navController: NavController) {
                                 color = Color.Black,
                                 textAlign = TextAlign.Center,
 
-                            )
+                                )
                         }
 
-                        Row() {
+                        Row {
                             Text(
                                 text = "Go to",
                                 fontSize = 16.sp,
@@ -155,7 +158,7 @@ fun PasswordPage(navController: NavController) {
                                 color = Color.Black,
                                 textAlign = TextAlign.Center,
 
-                            )
+                                )
                             Text(
                                 text = " LOGIN",
                                 fontSize = 16.sp,
@@ -175,6 +178,13 @@ fun PasswordPage(navController: NavController) {
     }
 }
 
+/**
+ * TODO Move this function to the passwordViewModel
+ *
+ * @param email
+ * @param name
+ * @return
+ */
 fun recoverPassword(email: String, name: String): Int {
     return 0
 }

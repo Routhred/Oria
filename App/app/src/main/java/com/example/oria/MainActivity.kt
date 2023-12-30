@@ -14,14 +14,24 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.oria.backend.ext.hasRequiredPermission
+import com.example.oria.backend.utils.DEBUG
+import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.OriaTheme
 import com.example.oria.ui.navigation.NavigationGraph
-import com.example.oria.viewModel.SplashViewModel
+import com.example.oria.viewModel.global.SplashViewModel
 
+/**
+ * Activity of the application
+ *
+ */
 class MainActivity : ComponentActivity() {
+
+    // To create splash view
     private val splashViewModel: SplashViewModel by viewModels()
 
     companion object {
+
+        // Permissions to have
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         val PERMISSION_TO_HAVE = arrayOf(
             Manifest.permission.CAMERA,
@@ -31,15 +41,21 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-
+    /**
+     * Override of the function onCreate
+     *
+     * @param savedInstanceState
+     */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!this.hasRequiredPermission(PERMISSION_TO_HAVE)) {
+            DEBUG(TagDebug.PERMISSIONS, "Request permissions")
             ActivityCompat.requestPermissions(this, PERMISSION_TO_HAVE, 0)
 
         }
 
+        DEBUG(TagDebug.CHANGE_VIEW, "Splash view")
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 splashViewModel.loading.value
@@ -47,22 +63,8 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             OriaTheme {
-
-                /* runBlocking{
-                    val client = HttpClient()
-                    val response: HttpResponse = client.get {
-                        url {
-                            protocol = URLProtocol.HTTP
-                            host = HttpRoutes.HOST
-                            path(HttpRoutes.LOGIN)
-                            parameters.append("name", "toto")
-                            parameters.append("password", "password")
-                        }
-                    }
-                    println(response.content)
-                    client.close()
-                }*/
-                NavigationGraph(this, /*tripViewModel = viewModel*/)
+                DEBUG(TagDebug.CHANGE_VIEW, "Launch NavigationGraph")
+                NavigationGraph(this)
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface PointDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -16,11 +17,13 @@ interface PointDao {
     @Delete
     // Function to delete a trip
     suspend fun removePoint(point: Point)
+
     @Update
     suspend fun updatePoint(point: Point)
 
     @Query("SELECT * from points")
     fun getAllPoints(): Flow<List<Point>>
+
     @Query("SELECT * from points WHERE id = :id")
     fun getPoint(id: Int): Flow<Point?>
 

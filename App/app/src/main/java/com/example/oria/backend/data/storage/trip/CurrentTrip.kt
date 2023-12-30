@@ -1,4 +1,4 @@
-package com.example.oria.viewModel
+package com.example.oria.backend.data.storage.trip
 
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -30,7 +30,7 @@ fun SettingsPage(navController: NavController) {
             screen.getDpHeight(),
             Alignment.Top,
         ),
-        modifier = androidx.compose.ui.Modifier
+        modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(vertical = screen.getDpHeight()),

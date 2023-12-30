@@ -34,7 +34,7 @@ import com.example.oria.ui.view.settings.button
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImportTripPage(navController: NavController){
+fun ImportTripPage(navController: NavController) {
 
     Box(
         modifier = Modifier
@@ -50,16 +50,16 @@ fun ImportTripPage(navController: NavController){
                 contentAlignment = Alignment.Center,
 
                 ) {
-            Text(
-                text = "Import an existing trip",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = loginFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                ),
-            )
+                Text(
+                    text = "Import an existing trip",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = loginFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                    ),
+                )
             }
             Box(
                 modifier = Modifier
@@ -108,7 +108,7 @@ fun ImportTripPage(navController: NavController){
                             navController = navController,
                             text = "Create a new trip",
                             height = 2,
-                            onClick = {navController.navigate("createTrip")}
+                            onClick = { navController.navigate("createTrip") }
                         )
                         button(
                             screen = screen,
@@ -116,7 +116,7 @@ fun ImportTripPage(navController: NavController){
                             text = "Cancel",
                             height = 2,
                             color = MaterialTheme.colorScheme.error,
-                            onClick = {navController.popBackStack()}
+                            onClick = { navController.popBackStack() }
                         )
 
 

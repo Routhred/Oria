@@ -3,7 +3,6 @@ package com.example.oria.ui.view.trip
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture.OnImageCapturedCallback
 import androidx.camera.core.ImageCaptureException
@@ -18,10 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,15 +34,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
 import com.example.oria.R
 import com.example.oria.backend.camera.CameraPreview
 import com.example.oria.backend.camera.CameraViewModel
+import com.example.oria.backend.utils.ERROR
+import com.example.oria.backend.utils.TagDebug
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraPage(
-    navController: NavController,
     viewModel: CameraViewModel,
     context: Context = LocalContext.current
 ) {
@@ -66,11 +63,12 @@ fun CameraPage(
         )
         IconButton(
             onClick = {
-                controller.cameraSelector = if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                    CameraSelector.DEFAULT_FRONT_CAMERA
-                } else {
-                    CameraSelector.DEFAULT_BACK_CAMERA
-                }
+                controller.cameraSelector =
+                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                        CameraSelector.DEFAULT_FRONT_CAMERA
+                    } else {
+                        CameraSelector.DEFAULT_BACK_CAMERA
+                    }
             },
             modifier = Modifier.offset(16.dp, 16.dp)
         ) {
@@ -145,7 +143,7 @@ fun takePhoto(
 
             override fun onError(exception: ImageCaptureException) {
                 super.onError(exception)
-                Log.e("Camera", "Couldn't take photo: ", exception)
+                ERROR(TagDebug.CAMERA, "Couldn't take photo: $exception")
             }
         }
     )

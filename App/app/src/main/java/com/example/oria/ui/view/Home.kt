@@ -1,7 +1,6 @@
 package com.example.oria.ui.view
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
@@ -26,27 +25,28 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.backend.location.LocationService
+import com.example.oria.backend.utils.DEBUG
+import com.example.oria.backend.utils.TagDebug
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
-import com.example.oria.viewModel.HomeViewModel
+import com.example.oria.viewModel.global.HomeViewModel
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun HomePage(
     navController: NavController,
-    homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.TripFactory)
+    homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
 
     val homeUiState by homeViewModel.homeUiState.collectAsState()
     val currentTripId = homeUiState.currentTrip.id
     val currentTripName = homeUiState.currentTrip.name
-
     val screen = rememberInfoScreen()
-    Log.d("currentTripName", currentTripName)
-    Log.d("Test getcurrentTripID", currentTripId.toString())
-    Log.d("Launch GPS", "Call to function")
+
+    DEBUG(TagDebug.HOME_INFO, "Current Trip Name = $currentTripName")
+    DEBUG(TagDebug.HOME_INFO, "Current Trip ID = $currentTripId")
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

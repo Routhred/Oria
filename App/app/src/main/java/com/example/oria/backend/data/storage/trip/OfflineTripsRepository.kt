@@ -1,4 +1,5 @@
 package com.example.oria.backend.data.storage.trip
+
 import kotlinx.coroutines.flow.Flow
 
 class OfflineTripsRepository(private val tripDao: TripDao) : TripRepository {

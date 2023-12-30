@@ -3,7 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     kotlin("plugin.serialization")
+    id("com.google.dagger.hilt.android")
+    id("org.jetbrains.dokka")
 }
+
+
+
 android {
     namespace = "com.example.oria"
     compileSdk = 34
@@ -122,6 +127,13 @@ dependencies {
     implementation("com.google.maps.android:android-maps-utils:3.4.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.maps.android:maps-compose:2.14.0")
+
+    // Hilt
+    implementation ("com.google.dagger:hilt-android:2.48.1")
+    kapt ("com.google.dagger:hilt-compiler:2.48.1")
+
+
+
 
 
 }

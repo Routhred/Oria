@@ -7,6 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 
+/**
+ * View with camera
+ *
+ * @param controller
+ * @param modifier
+ */
 @Composable
 fun CameraPreview(
     controller: LifecycleCameraController,

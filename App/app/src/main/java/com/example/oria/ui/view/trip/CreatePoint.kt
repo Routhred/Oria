@@ -2,11 +2,6 @@ package com.example.oria.ui.view.trip
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,20 +38,18 @@ import com.example.oria.viewModel.database.PointEntryViewModel
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 
 @Composable
 fun AddPointPage(
     navController: NavController,
     cameraViewModel: CameraViewModel,
-    viewModel: PointEntryViewModel = viewModel(factory = AppViewModelProvider.PointFactory),
-    tripId: Int? = 0
+    viewModel: PointEntryViewModel = viewModel(factory = AppViewModelProvider.factory)
 ){
     val bitmap = cameraViewModel.getBitmap()
-    println(cameraViewModel.photoTaken())
     val screen = rememberInfoScreen()
     val coroutine = rememberCoroutineScope()
+
     Column (
         verticalArrangement = Arrangement.spacedBy(screen.getDpHeight(0.5f)),
         horizontalAlignment = Alignment.CenterHorizontally,

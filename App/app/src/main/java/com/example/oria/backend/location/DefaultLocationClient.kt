@@ -18,6 +18,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Class to Update the location
+ *
+ * @property context
+ * @property client
+ */
 class DefaultLocationClient(
     private val context: Context,
     private val client: FusedLocationProviderClient
@@ -30,7 +36,7 @@ class DefaultLocationClient(
                 throw LocationClient.LocationException("Location permission denied")
             }
             val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as
-                LocationManager
+                    LocationManager
             val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             val isNetworkEnabled = locationManager.isProviderEnabled(
                 LocationManager.NETWORK_PROVIDER

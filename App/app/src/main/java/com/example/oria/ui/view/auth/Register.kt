@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oria.ui.theme.*
-import com.example.oria.ui.theme.loginFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +49,7 @@ fun RegisterPage(navController: NavController) {
                     .fillMaxHeight(0.3f),
                 contentAlignment = Alignment.Center,
 
-            ) {
+                ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -93,6 +92,7 @@ fun RegisterPage(navController: NavController) {
                         .offset(x = 0.dp, y = 80.dp)
                         .fillMaxWidth(0.8f),
                 ) {
+                    // TODO Change this and implement a viewModel
                     var name by remember {
                         mutableStateOf("")
                     }
@@ -162,7 +162,7 @@ fun RegisterPage(navController: NavController) {
                             textAlign = TextAlign.Center,
                         )
                     }
-                    Row() {
+                    Row {
                         Text(
                             text = "Already registered? Click",
                             fontSize = 16.sp,
@@ -171,7 +171,7 @@ fun RegisterPage(navController: NavController) {
                             color = Color.Black,
                             textAlign = TextAlign.Center,
 
-                        )
+                            )
                         Text(
                             text = " here",
                             fontSize = 16.sp,
@@ -184,7 +184,7 @@ fun RegisterPage(navController: NavController) {
                             },
                         )
                     }
-                    Row() {
+                    Row {
                         Text(
                             text = "Password forgotten? Click",
                             fontSize = 16.sp,
@@ -192,7 +192,7 @@ fun RegisterPage(navController: NavController) {
                             fontWeight = FontWeight.Normal,
                             color = Color.Black,
                             textAlign = TextAlign.Center,
-                            )
+                        )
                         Text(
                             text = " here",
                             fontSize = 16.sp,

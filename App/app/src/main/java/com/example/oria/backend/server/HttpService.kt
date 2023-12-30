@@ -10,7 +10,11 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.URLProtocol
 
-class HttpService private constructor(){
+/**
+ * Class to use HTTP services and request the server
+ * TODO The class has to be make (doesn't work yet)
+ */
+class HttpService private constructor() {
     companion object {
 
         @Volatile
@@ -21,6 +25,7 @@ class HttpService private constructor(){
                 instance ?: HttpClient().also { instance = it }
             }
     }
+
     val client = HttpClient(Android) {
         install(Logging) {
             level = LogLevel.ALL
@@ -29,6 +34,7 @@ class HttpService private constructor(){
             serializer = KotlinxSerializer()
         }
     }
+
     suspend fun Login(name: String, password: String): Int {
         val response: HttpResponse = client.get {
             url {

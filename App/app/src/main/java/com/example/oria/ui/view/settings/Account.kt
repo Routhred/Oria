@@ -49,7 +49,7 @@ fun AccountPage(navController: NavController) {
             .fillMaxSize()
             .padding(vertical = screen.getDpHeight()),
     ) {
-        Box() {
+        Box {
 
             Image(
                 painter = painterResource(R.drawable.ic_launcher_background),
