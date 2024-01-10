@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.oria.backend.ext.hasRequiredPermission
+import com.example.oria.backend.server.OriaClient
 import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.OriaTheme
@@ -39,6 +40,9 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
+
+
+
     }
 
     /**

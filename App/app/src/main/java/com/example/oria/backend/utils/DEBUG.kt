@@ -14,6 +14,7 @@ enum class TagDebug(val tag: String) {
     CREATE_POINT("Create Point"),
     CREATE_TRIP("Create Trip"),
     LOGIN("Login"),
+    SERVER("Server TEST"),
     GPS("GPS"),
     HOME_INFO("Home info"),
     STRING_OPERATION("String operation"),

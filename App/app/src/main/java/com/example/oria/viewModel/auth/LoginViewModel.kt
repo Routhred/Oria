@@ -5,13 +5,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.oria.backend.data.storage.dataStore.PreferencesKey
 import com.example.oria.backend.data.storage.dataStore.PreferencesManager
 import com.example.oria.backend.location.launchGPS
+import com.example.oria.backend.server.OriaClient
 import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.ERROR_LOGIN
 import com.example.oria.ui.theme.NO_ERROR
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * ViewModel for the login view
@@ -51,12 +57,16 @@ class LoginViewModel(preferencesManager: PreferencesManager) : ViewModel() {
      */
     fun login(context: Context): Int {
 
-        // Send request to the server
-        val token = requestLogin(context)
 
-        if (token == "ERROR") {
-            return ERROR_LOGIN
+        DEBUG(TagDebug.SERVER, "RunBlocking")
+        // Send request to the server
+        val login = GlobalScope.async{
+            OriaClient.getInstance().login(loginUiState.username, loginUiState.password)
         }
+
+        val token = login.onAwait
+        DEBUG(TagDebug.SERVER, token.toString())
+
         DEBUG(TagDebug.LOGIN, "Save Username to storage")
         // Save username in the storage
         preferencesManager.saveData(
@@ -68,7 +78,7 @@ class LoginViewModel(preferencesManager: PreferencesManager) : ViewModel() {
         // Save token in the storage
         preferencesManager.saveData(
             PreferencesKey.TOKEN,
-            token
+            ERROR_LOGIN.toString()
         )
 
         // Launch GPS Service

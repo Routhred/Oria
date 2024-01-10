@@ -41,6 +41,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.oria.MainActivity
 import com.example.oria.backend.ext.hasRequiredPermission
 import com.example.oria.permission.PermissionDialog
+import com.example.oria.ui.theme.ERROR_LOGIN
+import com.example.oria.ui.theme.NO_ERROR
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.auth.LoginViewModel
@@ -183,7 +185,7 @@ fun LoginPage(
                                     .clickable {
                                         errorCode = viewModel.login(context)
                                         when (errorCode) {
-                                            0 -> {
+                                            NO_ERROR -> {
                                                 navController.navigate(
                                                     "main",
                                                 ) {
@@ -193,7 +195,7 @@ fun LoginPage(
                                                 }
                                             }
 
-                                            1 -> errorField = "Error Login"
+                                            ERROR_LOGIN -> errorField = "Error Login"
                                         }
                                     },
                             ) {

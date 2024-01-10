@@ -103,11 +103,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
     // For HTTP
-    val ktorVersion = "1.6.3"
+    val ktorVersion = "2.3.7"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-android:$ktorVersion")
     implementation("io.ktor:ktor-client-serialization:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
