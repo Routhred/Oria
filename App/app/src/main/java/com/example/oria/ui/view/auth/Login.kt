@@ -40,9 +40,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.oria.MainActivity
 import com.example.oria.backend.ext.hasRequiredPermission
+import com.example.oria.backend.utils.DEBUG
+import com.example.oria.backend.utils.TagDebug
 import com.example.oria.permission.PermissionDialog
 import com.example.oria.ui.theme.ERROR_LOGIN
+import com.example.oria.ui.theme.ERROR_LOGIN_EMAIL
+import com.example.oria.ui.theme.ERROR_LOGIN_ID
 import com.example.oria.ui.theme.NO_ERROR
+import com.example.oria.ui.theme.NO_RESPONSE
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.auth.LoginViewModel
@@ -77,18 +82,29 @@ fun LoginPage(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background),
+                .background(
+                    when(viewModel.loginUiState.error_code){
+                        NO_RESPONSE -> MaterialTheme.colorScheme.background
+                        else -> MaterialTheme.colorScheme.error
+                    }
+                ),
         ) {
             Column {
                 Box(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
+                        .background(
+                            when(viewModel.loginUiState.error_code){
+                                NO_RESPONSE -> MaterialTheme.colorScheme.background
+                                else -> MaterialTheme.colorScheme.error
+                            }
+                        )
                         .fillMaxWidth()
                         .fillMaxHeight(0.3f),
                     contentAlignment = Alignment.Center,
 
                     ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        var errorField = viewModel.loginUiState.error_field
                         Text(
                             text = "WELCOME TO",
                             style = TextStyle(
@@ -103,6 +119,16 @@ fun LoginPage(
                             text = "ORIA",
                             style = TextStyle(
                                 fontSize = 70.sp,
+                                fontFamily = loginFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                textAlign = TextAlign.Center,
+                            ),
+                        )
+                        Text(
+                            text = errorField,
+                            style = TextStyle(
+                                fontSize = 16.sp,
                                 fontFamily = loginFontFamily,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black,
@@ -134,12 +160,6 @@ fun LoginPage(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(23.dp, Alignment.Top),
                         ) {
-                            var errorField by remember {
-                                mutableStateOf("")
-                            }
-                            var errorCode by remember {
-                                mutableIntStateOf(0)
-                            }
                             OutlinedTextField(
                                 value = viewModel.loginUiState.username,
                                 label = { Text(text = "Name") },
@@ -182,22 +202,7 @@ fun LoginPage(
                                         color = MaterialTheme.colorScheme.tertiary,
                                         shape = RoundedCornerShape(size = 8.dp),
                                     )
-                                    .clickable {
-                                        errorCode = viewModel.login(context)
-                                        when (errorCode) {
-                                            NO_ERROR -> {
-                                                navController.navigate(
-                                                    "main",
-                                                ) {
-                                                    popUpTo("auth") {
-                                                        inclusive = true
-                                                    }
-                                                }
-                                            }
-
-                                            ERROR_LOGIN -> errorField = "Error Login"
-                                        }
-                                    },
+                                    .clickable {viewModel.login(context, navController)},
                             ) {
                                 Text(
                                     text = "Login",

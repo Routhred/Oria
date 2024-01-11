@@ -21,8 +21,17 @@ const val TIMEOUT_MILLIS = 5_00L
 
 // Return Values
 const val NO_ERROR = 0
-const val ERROR_LOGIN = 1
+const val NO_RESPONSE = 1
+
+const val ERROR_LOGIN = -101
+const val ERROR_LOGIN_EMAIL = -102
+const val ERROR_LOGIN_ID = -103
+
+const val ERROR_INCORRECT_USERNAME_FORMAT = -201
+const val ERROR_INCORRECT_PASSWORD_FORMAT = -202
+
 const val ERROR_REQUEST = -1
+const val ERROR_SERVER = -500
 
 
 // SERVER values

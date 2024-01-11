@@ -1,9 +1,11 @@
 package com.example.oria.backend.server
 
+import android.speech.SpeechRecognizer.ERROR_SERVER
 import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.ERROR
 import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.CONNECTION_TIMEOUT
+import com.example.oria.ui.theme.ERROR_LOGIN
 import com.example.oria.ui.theme.ERROR_REQUEST
 import com.example.oria.ui.theme.NO_ERROR
 import com.example.oria.ui.theme.REQUEST_TIMEOUT
@@ -18,7 +20,9 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.HttpResponse
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.utils.EmptyContent.status
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.Serializable
 
@@ -50,6 +54,10 @@ class OriaClient {
                 DEBUG(TagDebug.SERVER, "${response.status.value}")
             }
         }
+        install(ContentNegotiation) {
+            json()
+        }
+
     }
 
     /**
@@ -86,10 +94,9 @@ class OriaClient {
      * @return
      */
     suspend fun login(username: String, password: String): Int {
-        DEBUG(TagDebug.SERVER, "Test : GET $URL_BASE")
         try {
             // val token =  getCsrf()
-            val response: HttpResponse = client.post("$URL_BASE/signin") {
+            val response = client.post("$URL_BASE/signin") {
                 // cookie(name = "X-CSRFToken", value = token.CSRFToken)
                 setBody(MultiPartFormDataContent(
                     formData {
@@ -98,10 +105,14 @@ class OriaClient {
                     }
                 ))
             }
-            val body: String = response.body()
+            val loginResponse: LoginResponse = response.body()
             DEBUG(TagDebug.SERVER, "Response Status : ${response.status}")
-            DEBUG(TagDebug.SERVER, "Response Body : ${body.toString()}")
-            return NO_ERROR
+            DEBUG(TagDebug.SERVER, "Response Body : ${loginResponse.ERROR_CODE}")
+            when(response.status.value){
+                in 200 .. 299 -> return NO_ERROR
+                in 500 .. 599 -> return ERROR_SERVER
+                else -> return loginResponse.ERROR_CODE
+            }
         } catch (e: Exception) {
             ERROR(TagDebug.SERVER, e.message.toString())
         }

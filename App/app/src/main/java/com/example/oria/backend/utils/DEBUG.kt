@@ -9,17 +9,23 @@ import android.util.Log
  */
 enum class TagDebug(val tag: String) {
     DATABASE("Database"),
-    PERMISSIONS("Pemissions"),
+    STORAGE("Storage"),
+
     CHANGE_VIEW("Change view"),
     CREATE_POINT("Create Point"),
     CREATE_TRIP("Create Trip"),
+    HOME_INFO("Home info"),
+
     LOGIN("Login"),
     SERVER("Server TEST"),
+
     GPS("GPS"),
-    HOME_INFO("Home info"),
-    STRING_OPERATION("String operation"),
     CAMERA("Camera"),
-    STORAGE("Storage")
+    PERMISSIONS("Pemissions"),
+
+    STRING_OPERATION("String operation"),
+    BEGIN_FUNCTION("Begin Function"),
+    END_FUNCTION("End function")
 }
 
 
