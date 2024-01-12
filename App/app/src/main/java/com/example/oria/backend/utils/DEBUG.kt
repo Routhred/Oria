@@ -17,7 +17,8 @@ enum class TagDebug(val tag: String) {
     HOME_INFO("Home info"),
 
     LOGIN("Login"),
-    SERVER("Server TEST"),
+    SERVER("Server"),
+    REGISTER("Register"),
 
     GPS("GPS"),
     CAMERA("Camera"),

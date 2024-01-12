@@ -5,23 +5,22 @@ import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.ERROR
 import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.CONNECTION_TIMEOUT
-import com.example.oria.ui.theme.ERROR_LOGIN
 import com.example.oria.ui.theme.ERROR_REQUEST
 import com.example.oria.ui.theme.NO_ERROR
 import com.example.oria.ui.theme.REQUEST_TIMEOUT
 import com.example.oria.ui.theme.URL_BASE
+import com.example.oria.viewModel.auth.RegisterState
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.observer.ResponseObserver
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.utils.EmptyContent.status
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.Serializable
@@ -95,9 +94,7 @@ class OriaClient {
      */
     suspend fun login(username: String, password: String): Int {
         try {
-            // val token =  getCsrf()
             val response = client.post("$URL_BASE/signin") {
-                // cookie(name = "X-CSRFToken", value = token.CSRFToken)
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("username", username)
@@ -108,9 +105,9 @@ class OriaClient {
             val loginResponse: LoginResponse = response.body()
             DEBUG(TagDebug.SERVER, "Response Status : ${response.status}")
             DEBUG(TagDebug.SERVER, "Response Body : ${loginResponse.ERROR_CODE}")
-            when(response.status.value){
-                in 200 .. 299 -> return NO_ERROR
-                in 500 .. 599 -> return ERROR_SERVER
+            when (response.status.value) {
+                in 200..299 -> return NO_ERROR
+                in 500..599 -> return ERROR_SERVER
                 else -> return loginResponse.ERROR_CODE
             }
         } catch (e: Exception) {
@@ -119,8 +116,28 @@ class OriaClient {
         return ERROR_REQUEST
     }
 
-    private suspend fun getCsrf(): Csrf_response {
-        return client.post("${URL_BASE}/get_csrf").body()
+    suspend fun register(registerState: RegisterState): RegisterResponse {
+        val response = client.post("$URL_BASE/signup") {
+            setBody(MultiPartFormDataContent(
+                formData {
+                    append("username", registerState.username)
+                    append("firstname", registerState.firstname)
+                    append("lastname", registerState.lastname)
+                    append("email", registerState.email)
+                    append("password", registerState.password)
+                    append("confirmpwd", registerState.confirmpwd)
+                }
+            ))
+        }
+        return when(response.status.value){
+            in 500 .. 599 -> {
+                RegisterResponse(
+                    ERROR_CODE = ERROR_SERVER,
+                    TOKEN = " "
+                )
+            }
+            else -> response.body()
+        }
     }
 
 }

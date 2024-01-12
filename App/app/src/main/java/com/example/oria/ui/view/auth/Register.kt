@@ -25,26 +25,45 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.ui.theme.*
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.viewModel.auth.RegisterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterPage(navController: NavController) {
+fun RegisterPage(
+    navController: NavController,
+    viewModel: RegisterViewModel = viewModel(factory = AppViewModelProvider.factory)
+) {
+    var registerState = viewModel.registerState
+    var errorField = registerState.error_field
     Box(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+            .background(
+                when(registerState.error_code){
+                    NO_RESPONSE -> MaterialTheme.colorScheme.background
+                    else -> MaterialTheme.colorScheme.error
+                }
+            )
             .fillMaxSize(),
     ) {
         Column {
             Box(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(
+                        when(registerState.error_code){
+                            NO_RESPONSE -> MaterialTheme.colorScheme.background
+                            else -> MaterialTheme.colorScheme.error
+                        }
+                    )
                     .fillMaxWidth()
                     .fillMaxHeight(0.3f),
                 contentAlignment = Alignment.Center,
@@ -73,6 +92,16 @@ fun RegisterPage(navController: NavController) {
                             textAlign = TextAlign.Center,
                         ),
                     )
+                    Text(
+                        text = errorField,
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = loginFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                        ),
+                    )
                 }
             }
             Box(
@@ -92,56 +121,70 @@ fun RegisterPage(navController: NavController) {
                         .offset(x = 0.dp, y = 80.dp)
                         .fillMaxWidth(0.8f),
                 ) {
-                    // TODO Change this and implement a viewModel
-                    var name by remember {
-                        mutableStateOf("")
-                    }
-                    var surname by remember {
-                        mutableStateOf("")
-                    }
-                    var email by remember {
-                        mutableStateOf("")
-                    }
-                    var password by remember {
-                        mutableStateOf("")
-                    }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(23.dp),
                     ) {
                         OutlinedTextField(
-                            value = name,
-                            label = { Text(text = "Name") },
-                            onValueChange = { text -> name = text },
+                            value = viewModel.registerState.firstname,
+                            label = { Text(text = "username") },
+                            onValueChange = { text ->
+                                    viewModel.updateUiState(
+                                        viewModel.registerState.copy(
+                                            firstname = text,
+                                            username = text
+                                        )
+                                    )
+
+                            },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(0.45f),
                         )
                         OutlinedTextField(
-                            value = name,
-                            label = { Text(text = "Surname") },
-                            onValueChange = { text -> name = text },
+                            value = viewModel.registerState.lastname,
+                            label = { Text(text = "lastname") },
+                            onValueChange = { text ->
+                                viewModel.updateUiState(
+                                    viewModel.registerState.copy(
+                                        lastname = text
+                                    )
+                                )
+                            },
                             singleLine = true,
                         )
                     }
 
                     OutlinedTextField(
-                        value = name,
+                        value = viewModel.registerState.email,
                         label = { Text(text = "Email") },
-                        onValueChange = { text -> name = text },
+                        onValueChange = { text ->
+                            viewModel.updateUiState(
+                                viewModel.registerState.copy(
+                                    email = text
+                                )
+                            )
+                        },
                         modifier = Modifier
                             .width(320.dp)
                             .height(73.dp),
                         singleLine = true,
                     )
                     OutlinedTextField(
-                        value = name,
+                        value = viewModel.registerState.password,
                         label = { Text(text = "Password") },
-                        onValueChange = { text -> name = text },
+                        onValueChange = { text ->
+                            viewModel.updateUiState(
+                                viewModel.registerState.copy(
+                                    password = text,
+                                    confirmpwd = text
+                                )
+                            )
+                        },
                         modifier = Modifier
                             .width(320.dp)
                             .height(73.dp),
                         singleLine = true,
                     )
-
+                    val context = LocalContext.current
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -151,7 +194,10 @@ fun RegisterPage(navController: NavController) {
                                 color = MaterialTheme.colorScheme.tertiary,
                                 shape = RoundedCornerShape(size = 8.dp),
                             )
-                            .clickable { println("Name : $name, password : $password") },
+                            .clickable {viewModel.register(
+                                context = context,
+                                navController = navController
+                            )},
                     ) {
                         Text(
                             text = "Register",

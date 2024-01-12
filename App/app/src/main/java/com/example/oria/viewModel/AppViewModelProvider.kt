@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.oria.OriaApplication
 import com.example.oria.viewModel.auth.LoginViewModel
+import com.example.oria.viewModel.auth.RegisterViewModel
 import com.example.oria.viewModel.database.PointEntryViewModel
 import com.example.oria.viewModel.database.TripEntryViewModel
 import com.example.oria.viewModel.global.HomeViewModel
@@ -41,6 +42,11 @@ object AppViewModelProvider {
         }
         initializer {
             LoginViewModel(
+                oriaApplication().container.preferencesManager
+            )
+        }
+        initializer {
+            RegisterViewModel(
                 oriaApplication().container.preferencesManager
             )
         }
