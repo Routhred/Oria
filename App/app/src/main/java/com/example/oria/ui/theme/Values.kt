@@ -22,6 +22,7 @@ const val TIMEOUT_MILLIS = 5_00L
 // Return Values
 const val NO_ERROR = 0
 const val NO_RESPONSE = 1
+const val EXIT_ERROR = -1
 
 const val ERROR_LOGIN = 101
 const val ERROR_LOGIN_EMAIL = 102
@@ -40,5 +41,5 @@ const val ERROR_SERVER = 500
 // SERVER values
 const val REQUEST_TIMEOUT = 6000L
 const val CONNECTION_TIMEOUT = 6000L
-const val URL_BASE = "http://10.0.2.2:8000"
+const val URL_BASE = "http://192.168.43.13:8000"
 

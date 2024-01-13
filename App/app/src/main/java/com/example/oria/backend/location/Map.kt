@@ -4,6 +4,8 @@ import android.location.Location
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.oria.backend.utils.DEBUG
+import com.example.oria.backend.utils.TagDebug
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -19,6 +21,7 @@ fun Map(lat: Double, lng: Double, modifier: Modifier = Modifier, zoom: Float = 1
         lat,
         lng
     )
+    DEBUG(TagDebug.GPS, "Position map : $lat, $lng")
     val cameraState = CameraPositionState(
         CameraPosition(
             co,

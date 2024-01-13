@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.oria.OriaApplication
 import com.example.oria.viewModel.auth.LoginViewModel
 import com.example.oria.viewModel.auth.RegisterViewModel
+import com.example.oria.viewModel.database.ImportTripViewModel
 import com.example.oria.viewModel.database.PointEntryViewModel
 import com.example.oria.viewModel.database.TripEntryViewModel
 import com.example.oria.viewModel.global.HomeViewModel
@@ -22,7 +23,14 @@ object AppViewModelProvider {
     val factory = viewModelFactory {
         initializer {
             TripEntryViewModel(
-                oriaApplication().container.tripsRepository
+                oriaApplication().container.tripsRepository,
+                oriaApplication().container.preferencesManager
+            )
+        }
+        initializer {
+            ImportTripViewModel(
+                oriaApplication().container.tripsRepository,
+                oriaApplication().container.preferencesManager
             )
         }
         initializer {
@@ -53,7 +61,8 @@ object AppViewModelProvider {
         initializer {
             PointEntryViewModel(
                 this.createSavedStateHandle(),
-                oriaApplication().container.pointsRepository
+                oriaApplication().container.pointsRepository,
+                oriaApplication().container.preferencesManager
             )
         }
         initializer {

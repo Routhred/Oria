@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface TripDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     // Function to insert a new trip in the database
-    suspend fun createTrip(trip: Trip): Long
+    suspend fun createTrip(trip: Trip)
 
     @Delete
     // Function to delete a trip

@@ -49,7 +49,6 @@ fun AddPointPage(
     val bitmap = cameraViewModel.getBitmap()
     val screen = rememberInfoScreen()
     val coroutine = rememberCoroutineScope()
-
     Column (
         verticalArrangement = Arrangement.spacedBy(screen.getDpHeight(0.5f)),
         horizontalAlignment = Alignment.CenterHorizontally,

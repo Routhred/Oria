@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.oria.viewModel.database.PointUiState
+import kotlinx.serialization.Serializable
+
 
 @Entity(tableName = "points")
 data class Point(
@@ -29,6 +31,7 @@ data class Point(
     )
 }
 
+@Serializable
 data class PointDetails(
     val id: Int = 0,
     val location: String = "",

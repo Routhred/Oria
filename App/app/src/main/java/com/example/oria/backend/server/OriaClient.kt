@@ -1,6 +1,8 @@
 package com.example.oria.backend.server
 
 import android.speech.SpeechRecognizer.ERROR_SERVER
+import com.example.oria.backend.data.storage.point.PointDetails
+import com.example.oria.backend.data.storage.trip.TripDetails
 import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.ERROR
 import com.example.oria.backend.utils.TagDebug
@@ -18,12 +20,9 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.observer.ResponseObserver
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
-import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.util.InternalAPI
-import kotlinx.serialization.Serializable
 
 /**
  * Class for client http
@@ -36,10 +35,9 @@ class OriaClient {
         @Volatile
         private var instance: OriaClient? = null
 
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: OriaClient().also { instance = it }
-            }
+        fun getInstance() = instance ?: synchronized(this) {
+            instance ?: OriaClient().also { instance = it }
+        }
     }
 
     val client = HttpClient(CIO) {
@@ -60,30 +58,8 @@ class OriaClient {
     }
 
     /**
-     * Test function
-     *
+     *  Functions for authentication
      */
-    @OptIn(InternalAPI::class)
-    suspend fun getToTest(): String {
-        DEBUG(TagDebug.SERVER, "Test : GET $URL_BASE")
-        try {
-            val response = client.get(URL_BASE)
-            DEBUG(
-                TagDebug.SERVER,
-                "Response Status : ${response.status}"
-                        + "Response content : ${response.content}"
-
-            )
-            return response.status.toString()
-        } catch (e: Exception) {
-            ERROR(TagDebug.SERVER, e.message.toString())
-
-        }
-
-        return ERROR_REQUEST.toString()
-
-
-    }
 
     /**
      * Function to send login request to the server
@@ -94,13 +70,11 @@ class OriaClient {
      */
     suspend fun login(username: String, password: String): Int {
         try {
-            val response = client.post("$URL_BASE/signin") {
-                setBody(MultiPartFormDataContent(
-                    formData {
-                        append("username", username)
-                        append("password", password)
-                    }
-                ))
+            val response = client.post("$URL_BASE/auth/signin") {
+                setBody(MultiPartFormDataContent(formData {
+                    append("username", username)
+                    append("password", password)
+                }))
             }
             val loginResponse: LoginResponse = response.body()
             DEBUG(TagDebug.SERVER, "Response Status : ${response.status}")
@@ -116,34 +90,113 @@ class OriaClient {
         return ERROR_REQUEST
     }
 
+    /**
+     * Function to send register request to the server
+     *
+     * @param registerState
+     * @return
+     */
     suspend fun register(registerState: RegisterState): RegisterResponse {
-        val response = client.post("$URL_BASE/signup") {
-            setBody(MultiPartFormDataContent(
-                formData {
-                    append("username", registerState.username)
-                    append("firstname", registerState.firstname)
-                    append("lastname", registerState.lastname)
-                    append("email", registerState.email)
-                    append("password", registerState.password)
-                    append("confirmpwd", registerState.confirmpwd)
-                }
-            ))
+        val response = client.post("$URL_BASE/auth/signup") {
+            setBody(MultiPartFormDataContent(formData {
+                append("username", registerState.username)
+                append("firstname", registerState.firstname)
+                append("lastname", registerState.lastname)
+                append("email", registerState.email)
+                append("password", registerState.password)
+                append("confirmpwd", registerState.confirmpwd)
+            }))
         }
-        return when(response.status.value){
-            in 500 .. 599 -> {
+        return when (response.status.value) {
+            in 500..599 -> {
                 RegisterResponse(
-                    ERROR_CODE = ERROR_SERVER,
-                    TOKEN = " "
+                    ERROR_CODE = ERROR_SERVER, TOKEN = " "
                 )
             }
+
             else -> response.body()
         }
     }
 
-}
+    /**
+     *  Functions for trip management
+     */
 
-@Serializable
-data class Csrf_response(
-    val detail: String,
-    val CSRFToken: String,
-)
+    /**
+     * Function to create a trip on the server
+     *
+     * @param tripDetails
+     * @param username
+     * @return the trip id created on the server
+     */
+    suspend fun createTrip(tripDetails: TripDetails, username: String): CreateTripResponse {
+        val response = client.post("$URL_BASE/trip/create_trip") {
+            setBody(MultiPartFormDataContent(formData {
+                append("name", tripDetails.name)
+                append("description", tripDetails.description)
+                append("place", tripDetails.location)
+                append("username", username)
+            }))
+        }
+        return when (response.status.value) {
+            in 500..599 -> {
+                CreateTripResponse(
+                    ERROR_CODE = ERROR_SERVER, TRIP_ID = 0
+                )
+            }
+
+            else -> response.body()
+        }
+    }
+
+    /**
+     * Function to import trip from the server
+     *
+     * @param trip_Id
+     * @param username
+     * @return trip details
+     */
+    suspend fun importTrip(trip_Id: Int, username: String): ImportTripResponse {
+
+        val response = client.post("$URL_BASE/trip/import_trip") {
+            setBody(MultiPartFormDataContent(formData {
+                append("trip_id", trip_Id)
+                append("username", username)
+            }))
+        }
+        return when (response.status.value) {
+            in 500..599 -> {
+                ImportTripResponse(
+                    ERROR_CODE = ERROR_SERVER, TRIP = TripDetails(), POINTS = listOf()
+                )
+            }
+
+            else -> response.body()
+        }
+    }
+
+    /**
+     *  Functions for point management
+     */
+    suspend fun createPoint(pointDetails: PointDetails, username: String, trip_id: Int):
+            CreatePointResponse{
+        val response = client.post("$URL_BASE/point/create_point"){
+            setBody(MultiPartFormDataContent(formData {
+                append("name", pointDetails.name)
+                append("description", pointDetails.description)
+                append("location", pointDetails.location)
+                append("trip_id", trip_id)
+            }))
+        }
+        return when (response.status.value) {
+            in 500..599 -> {
+                CreatePointResponse(
+                    ERROR_CODE = ERROR_SERVER,
+                    POINT_ID = 0
+                )
+            }
+
+            else -> response.body()
+        }
+    }
+}

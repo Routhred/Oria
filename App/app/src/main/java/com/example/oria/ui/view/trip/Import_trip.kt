@@ -22,19 +22,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.ui.view.settings.button
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.viewModel.database.ImportTripViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImportTripPage(navController: NavController) {
+fun ImportTripPage(
+    navController: NavController,
+    viewModel: ImportTripViewModel = viewModel(factory = AppViewModelProvider.factory)
+
+) {
 
     Box(
         modifier = Modifier
@@ -88,20 +96,33 @@ fun ImportTripPage(navController: NavController) {
                             mutableStateOf("")
                         }
                         OutlinedTextField(
-                            value = codeTrip,
+                            value = viewModel.importTripState.trip_id.toString(),
                             label = { Text(text = "Code") },
-                            onValueChange = { text -> codeTrip = text },
+                            onValueChange = { text -> viewModel.updateUiState(
+                                if(text.matches("[0-9]+".toRegex())){
+                                    text.toInt()
+                                }else{
+                                    0
+                                }
+                            ) },
                             modifier = Modifier
                                 .width(320.dp)
                                 .height(73.dp),
                             singleLine = true,
                         )
                         val screen = rememberInfoScreen()
+                        val context = LocalContext.current
                         button(
                             screen = screen,
                             navController = navController,
                             text = "Import",
-                            height = 2
+                            height = 2,
+                            onClick = {
+                                viewModel.importTrip(
+                                    context = context,
+                                    navController = navController
+                                )
+                            }
                         )
                         button(
                             screen = screen,

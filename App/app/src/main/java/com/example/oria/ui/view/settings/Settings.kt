@@ -56,6 +56,7 @@ fun SettingsPage(navController: NavController) {
             color = MaterialTheme.colorScheme.error,
             onClick = { navController.navigate("auth") }
             )
+        // TODO Delete data when logout
     }
 }
 

@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.dokka")
+    id ("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 

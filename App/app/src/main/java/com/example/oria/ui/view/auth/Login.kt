@@ -60,8 +60,9 @@ fun LoginPage(
     navController: NavController = rememberNavController(),
     viewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.factory),
 ) {
+    // TODO Import all user data when login
 
-    if (!LocalContext.current.hasRequiredPermission(MainActivity.PERMISSION_TO_HAVE)) {
+    if (false /*!LocalContext.current.hasRequiredPermission(MainActivity.PERMISSION_TO_HAVE)*/) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

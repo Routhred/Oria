@@ -3,6 +3,7 @@ package com.example.oria.backend.data.storage.trip
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * Data class for the trip
@@ -16,7 +17,7 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "trips")
 data class Trip(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "location") val location: String = "",
     @ColumnInfo(name = "name") val name: String = "No trip Registered",
@@ -41,7 +42,6 @@ data class Trip(
 
 /**
  * Class for the tripDetails (easier to use than Trip)
- * TODO Change this class to use only Trip could be better
  *
  * @property id
  * @property location
@@ -50,6 +50,7 @@ data class Trip(
  * @property description
  * @property points
  */
+@Serializable
 data class TripDetails(
     val id: Int = 0,
     val location: String = "",

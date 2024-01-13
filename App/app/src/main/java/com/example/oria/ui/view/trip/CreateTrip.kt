@@ -215,7 +215,7 @@ fun CreateTripPage(
                                         viewModel.tripUiState.tripDetails.copy(date = "$year-$month-$day")
                                     )
                                     coroutineScope.launch{
-                                        val currentTripId = viewModel.saveItem()
+                                        viewModel.saveItem()
                                         navController.popBackStack()
                                     }
                                 }
