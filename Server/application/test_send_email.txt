@@ -1,0 +1,9 @@
+from django.core.mail import send_mail
+
+send_mail(
+    'Sujet dgit',
+    'nouveau git.',
+    'oriasapienza@gmail.com',  # Utilisez l'adresse e-mail configurée dans EMAIL_HOST_USER
+    ['clement.berthet13@gmail.com'],  # Remplacez par l'adresse e-mail du destinataire
+    fail_silently=False,
+)

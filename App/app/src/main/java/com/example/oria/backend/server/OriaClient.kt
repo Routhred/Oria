@@ -2,13 +2,14 @@ package com.example.oria.backend.server
 
 import android.speech.SpeechRecognizer.ERROR_SERVER
 import com.example.oria.backend.data.storage.point.PointDetails
+import com.example.oria.backend.data.storage.point.PointRepository
+import com.example.oria.backend.data.storage.trip.CurrentTrip
 import com.example.oria.backend.data.storage.trip.TripDetails
+import com.example.oria.backend.data.storage.trip.TripRepository
 import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.ERROR
 import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.CONNECTION_TIMEOUT
-import com.example.oria.ui.theme.ERROR_REQUEST
-import com.example.oria.ui.theme.NO_ERROR
 import com.example.oria.ui.theme.REQUEST_TIMEOUT
 import com.example.oria.ui.theme.URL_BASE
 import com.example.oria.viewModel.auth.RegisterState
@@ -56,6 +57,8 @@ class OriaClient {
         }
 
     }
+    lateinit var tripsRepository: TripRepository
+    lateinit var pointRepository: PointRepository
 
     /**
      *  Functions for authentication
@@ -68,7 +71,7 @@ class OriaClient {
      * @param password
      * @return
      */
-    suspend fun login(username: String, password: String): Int {
+    suspend fun login(username: String, password: String): LoginResponse {
         try {
             val response = client.post("$URL_BASE/auth/signin") {
                 setBody(MultiPartFormDataContent(formData {
@@ -78,16 +81,20 @@ class OriaClient {
             }
             val loginResponse: LoginResponse = response.body()
             DEBUG(TagDebug.SERVER, "Response Status : ${response.status}")
-            DEBUG(TagDebug.SERVER, "Response Body : ${loginResponse.ERROR_CODE}")
-            when (response.status.value) {
-                in 200..299 -> return NO_ERROR
-                in 500..599 -> return ERROR_SERVER
-                else -> return loginResponse.ERROR_CODE
+            if (response.status.value in 500..599) {
+                 return LoginResponse(
+                     ERROR_CODE=loginResponse.ERROR_CODE,
+                     TRIPS = listOf()
+                 )
             }
+            return loginResponse
         } catch (e: Exception) {
             ERROR(TagDebug.SERVER, e.message.toString())
         }
-        return ERROR_REQUEST
+        return return LoginResponse(
+            ERROR_CODE= ERROR_SERVER,
+            TRIPS = listOf()
+        )
     }
 
     /**
@@ -186,6 +193,7 @@ class OriaClient {
                 append("description", pointDetails.description)
                 append("location", pointDetails.location)
                 append("trip_id", trip_id)
+                append("image", pointDetails.image)
             }))
         }
         return when (response.status.value) {
@@ -193,6 +201,66 @@ class OriaClient {
                 CreatePointResponse(
                     ERROR_CODE = ERROR_SERVER,
                     POINT_ID = 0
+                )
+            }
+
+            else -> response.body()
+        }
+    }
+
+    suspend fun importPoint(point_id: Int): ImportPointResponse{
+        val response = client.post("$URL_BASE/point/import_point"){
+            setBody(MultiPartFormDataContent(formData{
+                append("point_id", point_id)
+            }))
+        }
+        return when (response.status.value) {
+            in 500..599 -> {
+                ImportPointResponse(
+                    ERROR_CODE = ERROR_SERVER,
+                    POINT = PointDetails()
+                )
+            }
+
+            else -> response.body()
+        }
+    }
+
+
+    suspend fun callImportTrip(trip_id: Int, username: String){
+        val response: ImportTripResponse =
+            OriaClient.getInstance().importTrip(
+                trip_id,
+                username
+            )
+        val imported_trip: TripDetails = response.TRIP
+
+        DEBUG(TagDebug.CREATE_TRIP, imported_trip.toString())
+        tripsRepository.insertTrip(imported_trip.toTrip())
+        CurrentTrip.getInstance().updateCurrentTripCode(imported_trip.id)
+
+        importAllPoints(response.POINTS)
+
+    }
+
+    private suspend fun importAllPoints(points: List<Int>){
+        for(point in points){
+            val point_details: ImportPointResponse = OriaClient.getInstance().importPoint(point)
+            DEBUG(TagDebug.CREATE_POINT,"Import point: ${point_details.POINT}")
+            pointRepository.insertPoint(point_details.POINT.toPoint())
+        }
+    }
+
+    suspend fun deletePoint(pointDetails: PointDetails): DeletePointResponse{
+        val response = client.post("$URL_BASE/point/delete_point"){
+            setBody(MultiPartFormDataContent(formData{
+                append("id",pointDetails.id)
+            }))
+        }
+        return when (response.status.value) {
+            in 500..599 -> {
+                DeletePointResponse(
+                    ERROR_CODE = ERROR_SERVER
                 )
             }
 

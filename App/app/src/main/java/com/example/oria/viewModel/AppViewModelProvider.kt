@@ -12,6 +12,7 @@ import com.example.oria.viewModel.database.ImportTripViewModel
 import com.example.oria.viewModel.database.PointEntryViewModel
 import com.example.oria.viewModel.database.TripEntryViewModel
 import com.example.oria.viewModel.global.HomeViewModel
+import com.example.oria.viewModel.global.SettingsViewModel
 import com.example.oria.viewModel.trip.GalleryViewModel
 import com.example.oria.viewModel.trip.PointViewModel
 import com.example.oria.viewModel.trip.TripViewModel
@@ -29,8 +30,8 @@ object AppViewModelProvider {
         }
         initializer {
             ImportTripViewModel(
-                oriaApplication().container.tripsRepository,
                 oriaApplication().container.preferencesManager
+
             )
         }
         initializer {
@@ -69,6 +70,12 @@ object AppViewModelProvider {
             PointViewModel(
                 this.createSavedStateHandle(),
                 oriaApplication().container.pointsRepository
+            )
+        }
+        initializer {
+            SettingsViewModel(
+                oriaApplication().container.pointsRepository,
+                oriaApplication().container.tripsRepository
             )
         }
     }

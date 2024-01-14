@@ -13,4 +13,5 @@ class OfflinePointsRepository(private val pointDao: PointDao) : PointRepository 
     override suspend fun deletePoint(item: Point) = pointDao.removePoint(item)
 
     override suspend fun updatePoint(item: Point) = pointDao.updatePoint(item)
+    override suspend fun nukeTable() = pointDao.nukeTable()
 }

@@ -26,4 +26,7 @@ interface TripDao {
 
     @Query("SELECT * from trips WHERE id = (SELECT MAX(id) from trips)")
     fun getLastTrip(): Flow<Trip?>
+
+    @Query("DELETE from trips")
+    fun nukeTable()
 }

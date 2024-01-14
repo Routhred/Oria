@@ -1,18 +1,13 @@
 package com.example.oria
 
 import android.app.Application
-import android.content.Context
 import android.location.Location
-import android.util.Log
-import androidx.datastore.dataStore
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.oria.backend.data.storage.AppContainer
 import com.example.oria.backend.data.storage.AppDataContainer
 import com.example.oria.backend.data.storage.dataStore.PreferencesManager
 import com.example.oria.backend.data.storage.point.PointDatabase
 import com.example.oria.backend.data.storage.trip.TripDatabase
-import com.google.android.gms.maps.model.LatLng
+import com.example.oria.backend.server.OriaClient
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -40,8 +35,14 @@ class OriaApplication : Application() {
         PreferencesManager.getManager(context = this)
     }
 
+
+
     override fun onCreate(){
         super.onCreate()
+        val trip_communication = OriaClient.getInstance()
+
         container = AppDataContainer(this)
+        trip_communication.tripsRepository = container.tripsRepository
+        trip_communication.pointRepository = container.pointsRepository
     }
 }

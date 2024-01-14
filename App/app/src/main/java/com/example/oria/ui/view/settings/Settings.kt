@@ -17,12 +17,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
+import com.example.oria.viewModel.AppViewModelProvider
+import com.example.oria.viewModel.global.SettingsViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsPage(navController: NavController) {
+fun SettingsPage(
+    navController: NavController,
+    viewModel: SettingsViewModel = viewModel(factory = AppViewModelProvider.factory)
+) {
     val screen = rememberInfoScreen()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,9 +63,12 @@ fun SettingsPage(navController: NavController) {
             navController = navController,
             text = "Disconnect",
             color = MaterialTheme.colorScheme.error,
-            onClick = { navController.navigate("auth") }
-            )
-        // TODO Delete data when logout
+            onClick = {
+                GlobalScope.launch{
+                    viewModel.logout()
+                }
+                navController.navigate("auth")
+            })
     }
 }
 

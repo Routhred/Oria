@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oria.backend.data.storage.point.Point
 import com.example.oria.backend.data.storage.point.PointRepository
+import com.example.oria.backend.server.OriaClient
 import com.example.oria.ui.theme.TIMEOUT_MILLIS
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.stateIn
  */
 class PointViewModel(
     savedStateHandle: SavedStateHandle,
-    pointRepository: PointRepository
+    private val pointRepository: PointRepository
 ) :
     ViewModel() {
 
@@ -38,6 +39,12 @@ class PointViewModel(
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
         initialValue = PointUiState(Point())
     )
+
+    suspend fun deletPoint(){
+        val currentPoint: Point = pointUiState.value.currentPoint
+        pointRepository.deletePoint(currentPoint)
+        OriaClient.getInstance().deletePoint(currentPoint.toPointDetails())
+    }
 
 }
 

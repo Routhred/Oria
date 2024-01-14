@@ -3,7 +3,6 @@ package com.example.oria.viewModel.database
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import com.example.oria.backend.data.storage.dataStore.PreferencesKey
 import com.example.oria.backend.data.storage.dataStore.PreferencesManager
@@ -18,7 +17,6 @@ import com.example.oria.backend.utils.TagDebug
 import com.example.oria.ui.theme.ERROR_SERVER
 import com.example.oria.ui.theme.EXIT_ERROR
 import com.example.oria.ui.theme.NO_ERROR
-import com.example.oria.viewModel.auth.LoginUiState
 
 /**
  * View Model for the new trip view

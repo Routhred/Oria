@@ -119,7 +119,6 @@ fun ImportTripPage(
                             height = 2,
                             onClick = {
                                 viewModel.importTrip(
-                                    context = context,
                                     navController = navController
                                 )
                             }

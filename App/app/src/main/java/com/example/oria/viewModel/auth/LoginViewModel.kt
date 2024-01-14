@@ -21,10 +21,7 @@ import com.example.oria.ui.theme.ERROR_LOGIN_EMAIL
 import com.example.oria.ui.theme.ERROR_LOGIN_ID
 import com.example.oria.ui.theme.ERROR_SERVER
 import com.example.oria.ui.theme.NO_ERROR
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * ViewModel for the login view
@@ -33,7 +30,7 @@ import kotlinx.coroutines.runBlocking
  *
  * @param preferencesManager
  */
-class LoginViewModel(preferencesManager: PreferencesManager) : ViewModel() {
+class LoginViewModel(private val preferencesManager: PreferencesManager) : ViewModel() {
 
     var loginUiState by mutableStateOf(
         LoginUiState(
@@ -42,9 +39,9 @@ class LoginViewModel(preferencesManager: PreferencesManager) : ViewModel() {
     )
         private set
 
-    private val preferencesManager = preferencesManager
     private lateinit var _navController: NavController
     private lateinit var _context: Context
+    private val _client: OriaClient = OriaClient.getInstance()
 
 
     /**
@@ -133,11 +130,21 @@ class LoginViewModel(preferencesManager: PreferencesManager) : ViewModel() {
      */
     private suspend fun callLogin() {
         DEBUG(TagDebug.BEGIN_FUNCTION, "callLogin")
-        val responseCode: Int = OriaClient.getInstance().login(
+        val response = _client.login(
             loginUiState.username, loginUiState
                 .password
         )
-        loginUiState = loginUiState.copy(error_code = responseCode)
+        loginUiState = loginUiState.copy(error_code = response.ERROR_CODE)
+        DEBUG(TagDebug.LOGIN, response.TRIPS.toString())
+
+        for(trip in response.TRIPS){
+            _client.callImportTrip(
+                trip,
+                preferencesManager.getData(PreferencesKey.USERNAME, "")
+            )
+        }
+
+
         finishLogin()
     }
 }

@@ -15,5 +15,5 @@ data class CreateTripResponse(
 data class ImportTripResponse(
     val ERROR_CODE: Int,
     val TRIP: TripDetails,
-    val POINTS: List<PointDetails>
+    val POINTS: List<Int>
 )

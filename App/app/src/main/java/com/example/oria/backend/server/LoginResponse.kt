@@ -9,5 +9,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class LoginResponse(
-    val ERROR_CODE: Int
+    val ERROR_CODE: Int,
+    val TRIPS: List<Int>
 )

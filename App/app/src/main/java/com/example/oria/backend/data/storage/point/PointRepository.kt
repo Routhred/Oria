@@ -10,4 +10,5 @@ interface PointRepository {
     suspend fun insertPoint(item: Point)
     suspend fun deletePoint(item: Point)
     suspend fun updatePoint(item: Point)
+    suspend fun nukeTable()
 }

@@ -29,4 +29,7 @@ interface PointDao {
 
     @Query("SELECT * from points WHERE tripCode = :tripCode")
     fun getTripPoints(tripCode: Int): Flow<List<Point>>
+
+    @Query("DELETE from points")
+    fun nukeTable()
 }

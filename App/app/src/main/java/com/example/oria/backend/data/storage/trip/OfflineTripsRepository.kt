@@ -13,4 +13,5 @@ class OfflineTripsRepository(private val tripDao: TripDao) : TripRepository {
     override suspend fun deleteTrip(item: Trip) = tripDao.removeTrip(item)
 
     override suspend fun updateTrip(item: Trip) = tripDao.updateTrip(item)
+    override suspend fun nukeTable() = tripDao.nukeTable()
 }

@@ -9,4 +9,5 @@ interface TripRepository {
     suspend fun insertTrip(item: Trip)
     suspend fun deleteTrip(item: Trip)
     suspend fun updateTrip(item: Trip)
+    suspend fun nukeTable()
 }
