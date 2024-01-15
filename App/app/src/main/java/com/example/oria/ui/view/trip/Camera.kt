@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -40,7 +39,6 @@ import com.example.oria.backend.camera.CameraViewModel
 import com.example.oria.backend.utils.ERROR
 import com.example.oria.backend.utils.TagDebug
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraPage(
     viewModel: CameraViewModel,

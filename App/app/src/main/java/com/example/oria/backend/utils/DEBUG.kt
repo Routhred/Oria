@@ -8,7 +8,6 @@ import android.util.Log
  * @property tag
  */
 enum class TagDebug(val tag: String) {
-    DATABASE("Database"),
     STORAGE("Storage"),
 
     CHANGE_VIEW("Change view"),
@@ -25,8 +24,7 @@ enum class TagDebug(val tag: String) {
     PERMISSIONS("Pemissions"),
 
     STRING_OPERATION("String operation"),
-    BEGIN_FUNCTION("Begin Function"),
-    END_FUNCTION("End function")
+    BEGIN_FUNCTION("Begin Function")
 }
 
 

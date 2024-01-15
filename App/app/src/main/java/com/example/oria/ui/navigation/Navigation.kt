@@ -1,6 +1,5 @@
 package com.example.oria.ui.navigation
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -38,9 +37,7 @@ import com.example.oria.ui.view.trip.PointPage
  */
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun NavigationGraph(
-    ctx: Context,
-) {
+fun NavigationGraph() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -112,7 +109,8 @@ fun NavigationGraph(
             composable(route = Screen.CreateTripScreen.route) {
                 CreateTripPage(navController = navController)
             }
-            composable(route = "${Screen.PointScreen.route}/{pointId}",
+            composable(
+                route = "${Screen.PointScreen.route}/{pointId}",
                 arguments = listOf(navArgument("pointId") { type = NavType.IntType })
             ) {
                 PointPage(navController = navController)
@@ -135,7 +133,7 @@ fun NavigationGraph(
         }
 
         composable(route = Screen.ProfileScreen.route) {
-            ProfilePage(navController = navController)
+            ProfilePage()
         }
     }
 }

@@ -35,10 +35,13 @@ class ImportTripViewModel(
         )
     }
 
-    fun importTrip(navController: NavController){
+    fun importTrip(navController: NavController) {
         val tripCommunication = OriaClient.getInstance()
-        viewModelScope.launch{
-            tripCommunication.callImportTrip(importTripState.trip_id, preferencesManager.getData(PreferencesKey.USERNAME,""))
+        viewModelScope.launch {
+            tripCommunication.callImportTrip(
+                importTripState.trip_id,
+                preferencesManager.getData(PreferencesKey.USERNAME, "")
+            )
         }
         navController.navigate("main")
     }

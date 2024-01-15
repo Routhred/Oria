@@ -38,7 +38,6 @@ import com.example.oria.ui.view.settings.button
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.trip.PointViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,7 +112,7 @@ fun PointPage(
                     height = 2,
                     color = MaterialTheme.colorScheme.error,
                     onClick = {
-                        GlobalScope.launch{
+                        GlobalScope.launch {
                             pointViewModel.deletPoint()
                         }
                         navController.popBackStack()

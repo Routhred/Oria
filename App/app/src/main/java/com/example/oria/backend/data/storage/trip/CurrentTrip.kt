@@ -2,12 +2,11 @@ package com.example.oria.backend.data.storage.trip
 
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
-class CurrentTrip  {
+class CurrentTrip {
 
     private var _currentTripId = MutableStateFlow(0)
-    val currentTripId = _currentTripId.asStateFlow()
+
     companion object {
 
         @Volatile
@@ -18,14 +17,9 @@ class CurrentTrip  {
                 instance ?: CurrentTrip().also { instance = it }
             }
     }
-    fun updateCurrentTripCode(id: Int){
+
+    fun updateCurrentTripCode(id: Int) {
         _currentTripId.value = id
         Log.d("CurrentTrip::updateCurrentTripCode", _currentTripId.value.toString())
     }
-
-    fun getTripId(): Int{
-        return _currentTripId.value
-    }
-
-
 }

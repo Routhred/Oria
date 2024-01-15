@@ -15,15 +15,15 @@ import com.example.oria.ui.theme.URL_BASE
 import com.example.oria.viewModel.auth.RegisterState
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.observer.ResponseObserver
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.serialization.kotlinx.json.json
 
 /**
  * Class for client http
@@ -41,7 +41,7 @@ class OriaClient {
         }
     }
 
-    val client = HttpClient(CIO) {
+    private val client = HttpClient(CIO) {
 
         install(HttpTimeout) {
             requestTimeoutMillis = REQUEST_TIMEOUT
@@ -82,17 +82,17 @@ class OriaClient {
             val loginResponse: LoginResponse = response.body()
             DEBUG(TagDebug.SERVER, "Response Status : ${response.status}")
             if (response.status.value in 500..599) {
-                 return LoginResponse(
-                     ERROR_CODE=loginResponse.ERROR_CODE,
-                     TRIPS = listOf()
-                 )
+                return LoginResponse(
+                    ERROR_CODE = loginResponse.ERROR_CODE,
+                    TRIPS = listOf()
+                )
             }
             return loginResponse
         } catch (e: Exception) {
             ERROR(TagDebug.SERVER, e.message.toString())
         }
-        return return LoginResponse(
-            ERROR_CODE= ERROR_SERVER,
+        return LoginResponse(
+            ERROR_CODE = ERROR_SERVER,
             TRIPS = listOf()
         )
     }
@@ -163,7 +163,7 @@ class OriaClient {
      * @param username
      * @return trip details
      */
-    suspend fun importTrip(trip_Id: Int, username: String): ImportTripResponse {
+    private suspend fun importTrip(trip_Id: Int, username: String): ImportTripResponse {
 
         val response = client.post("$URL_BASE/trip/import_trip") {
             setBody(MultiPartFormDataContent(formData {
@@ -182,12 +182,36 @@ class OriaClient {
         }
     }
 
+    suspend fun callImportTrip(trip_id: Int, username: String) {
+        val response: ImportTripResponse =
+            importTrip(
+                trip_id,
+                username
+            )
+        val imported_trip: TripDetails = response.TRIP
+
+        DEBUG(TagDebug.CREATE_TRIP, imported_trip.toString())
+        tripsRepository.insertTrip(imported_trip.toTrip())
+        CurrentTrip.getInstance().updateCurrentTripCode(imported_trip.id)
+
+        importAllPoints(response.POINTS)
+
+    }
+
     /**
      *  Functions for point management
      */
-    suspend fun createPoint(pointDetails: PointDetails, username: String, trip_id: Int):
-            CreatePointResponse{
-        val response = client.post("$URL_BASE/point/create_point"){
+
+    /**
+     * Function to create a point
+     *
+     * @param pointDetails
+     * @param trip_id
+     * @return
+     */
+    suspend fun createPoint(pointDetails: PointDetails, trip_id: Int):
+            CreatePointResponse {
+        val response = client.post("$URL_BASE/point/create_point") {
             setBody(MultiPartFormDataContent(formData {
                 append("name", pointDetails.name)
                 append("description", pointDetails.description)
@@ -208,9 +232,15 @@ class OriaClient {
         }
     }
 
-    suspend fun importPoint(point_id: Int): ImportPointResponse{
-        val response = client.post("$URL_BASE/point/import_point"){
-            setBody(MultiPartFormDataContent(formData{
+    /**
+     * Function to import a point from server
+     *
+     * @param point_id
+     * @return
+     */
+    private suspend fun importPoint(point_id: Int): ImportPointResponse {
+        val response = client.post("$URL_BASE/point/import_point") {
+            setBody(MultiPartFormDataContent(formData {
                 append("point_id", point_id)
             }))
         }
@@ -226,35 +256,29 @@ class OriaClient {
         }
     }
 
-
-    suspend fun callImportTrip(trip_id: Int, username: String){
-        val response: ImportTripResponse =
-            OriaClient.getInstance().importTrip(
-                trip_id,
-                username
-            )
-        val imported_trip: TripDetails = response.TRIP
-
-        DEBUG(TagDebug.CREATE_TRIP, imported_trip.toString())
-        tripsRepository.insertTrip(imported_trip.toTrip())
-        CurrentTrip.getInstance().updateCurrentTripCode(imported_trip.id)
-
-        importAllPoints(response.POINTS)
-
-    }
-
-    private suspend fun importAllPoints(points: List<Int>){
-        for(point in points){
-            val point_details: ImportPointResponse = OriaClient.getInstance().importPoint(point)
-            DEBUG(TagDebug.CREATE_POINT,"Import point: ${point_details.POINT}")
+    /**
+     * Function to import a list of points from server
+     *
+     * @param points
+     */
+    private suspend fun importAllPoints(points: List<Int>) {
+        for (point in points) {
+            val point_details: ImportPointResponse = importPoint(point)
+            DEBUG(TagDebug.CREATE_POINT, "Import point: ${point_details.POINT}")
             pointRepository.insertPoint(point_details.POINT.toPoint())
         }
     }
 
-    suspend fun deletePoint(pointDetails: PointDetails): DeletePointResponse{
-        val response = client.post("$URL_BASE/point/delete_point"){
-            setBody(MultiPartFormDataContent(formData{
-                append("id",pointDetails.id)
+    /**
+     * Function to delete a point
+     *
+     * @param pointDetails
+     * @return
+     */
+    suspend fun deletePoint(pointDetails: PointDetails): DeletePointResponse {
+        val response = client.post("$URL_BASE/point/delete_point") {
+            setBody(MultiPartFormDataContent(formData {
+                append("id", pointDetails.id)
             }))
         }
         return when (response.status.value) {

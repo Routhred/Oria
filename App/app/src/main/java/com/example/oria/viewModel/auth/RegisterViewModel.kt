@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.oria.backend.data.storage.dataStore.PreferencesKey
 import com.example.oria.backend.data.storage.dataStore.PreferencesManager
@@ -45,44 +44,51 @@ class RegisterViewModel(preferencesManager: PreferencesManager) : ViewModel() {
         registerState = new_state
     }
 
-    fun register(context: Context, navController: NavController){
+    fun register(context: Context, navController: NavController) {
         _navController = navController
         _context = context
         DEBUG(TagDebug.REGISTER, registerState.toString())
-        viewModelScope.launch{
+        viewModelScope.launch {
             callRegister()
         }
     }
 
-    suspend fun callRegister(){
+    suspend fun callRegister() {
         val response: RegisterResponse = OriaClient.getInstance().register(registerState)
         registerState = registerState.copy(error_code = response.ERROR_CODE, token = response.TOKEN)
         finishRegister()
     }
 
 
-    fun finishRegister(){
+    fun finishRegister() {
 
         val error_code: Int = registerState.error_code
 
-        if(error_code != NO_ERROR){
+        if (error_code != NO_ERROR) {
             ERROR(TagDebug.REGISTER, error_code.toString())
-            when(error_code){
+            when (error_code) {
                 ERROR_SERVER ->
                     registerState = registerState.copy(error_field = "Server error")
+
                 ERROR_INCORRECT_USERNAME_FORMAT ->
                     registerState = registerState.copy(
-                        error_field = "Incorrect username (maybe already taken)")
+                        error_field = "Incorrect username (maybe already taken)"
+                    )
+
                 ERROR_INCORRECT_NAME_FORMAT ->
                     registerState = registerState.copy(
                         error_field = "Incorrect first/last name format"
                     )
+
                 ERROR_INCORRECT_EMAIL_FORMAT ->
                     registerState = registerState.copy(error_field = "Incorrect email format")
+
                 ERROR_INCORRECT_PASSWORD_FORMAT ->
                     registerState = registerState.copy(error_field = "Incorrect password format")
+
                 ERROR_PASSWORD ->
                     registerState = registerState.copy(error_field = "Password are not the same")
+
                 else ->
                     registerState = registerState.copy(error_field = "Bad Request")
 
@@ -114,8 +120,8 @@ data class RegisterState(
     val error_code: Int = 1,
     val error_field: String = "",
     val token: String = ""
-){
-    override fun toString():String{
+) {
+    override fun toString(): String {
         return "username : $username\n" +
                 "firstname : $firstname\n" +
                 "lastname : $lastname\n" +

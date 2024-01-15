@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.oria.backend.data.storage.dataStore.PreferencesKey
 import com.example.oria.backend.data.storage.dataStore.PreferencesManager
 import com.example.oria.backend.data.storage.point.PointDetails
 import com.example.oria.backend.data.storage.point.PointRepository
@@ -56,45 +55,45 @@ class PointEntryViewModel(
      * Save current Ui State item to the database
      *
      */
-    suspend fun saveItem(): Int{
+    suspend fun saveItem(): Int {
 
         val response: CreatePointResponse =
             OriaClient.getInstance().createPoint(
                 pointUiState.pointDetails,
-                preferencesManager.getData(PreferencesKey.USERNAME, ""),
                 tripId
             )
 
         val error_code = response.ERROR_CODE
-
-        // TODO Handle error
         if (error_code != NO_ERROR) {
-            when (error_code) {
+            pointUiState = when (error_code) {
                 ERROR_SERVER -> {
-                    pointUiState = pointUiState.copy(error_field = "Server error")
+                    pointUiState.copy(error_field = "Server error")
                 }
 
                 else -> {
-                    pointUiState = pointUiState.copy(error_field = "Bad request")
+                    pointUiState.copy(error_field = "Bad request")
                 }
             }
             ERROR(TagDebug.CREATE_TRIP, pointUiState.error_field)
             return EXIT_ERROR
         }
 
-        updateUiState(pointUiState.pointDetails.copy(
-            id=response.POINT_ID,
-            tripCode = tripId
-        ))
+        updateUiState(
+            pointUiState.pointDetails.copy(
+                id = response.POINT_ID,
+                tripCode = tripId
+            )
+        )
 
 
         if (validateInput()) {
-            DEBUG(TagDebug.CREATE_POINT, "Insertion in the database : ${
-                pointUiState.pointDetails
-            }"
+            DEBUG(
+                TagDebug.CREATE_POINT, "Insertion in the database : ${
+                    pointUiState.pointDetails
+                }"
             )
             pointsRepository.insertPoint(pointUiState.pointDetails.toPoint())
-        }else{
+        } else {
             ERROR(TagDebug.CREATE_POINT, "Current UI State Not Valid")
             return EXIT_ERROR
         }

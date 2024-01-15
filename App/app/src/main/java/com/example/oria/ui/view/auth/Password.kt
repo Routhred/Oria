@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -32,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oria.ui.theme.loginFontFamily
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordPage(navController: NavController) {
     Box(
@@ -131,10 +129,7 @@ fun PasswordPage(navController: NavController) {
                                     shape = RoundedCornerShape(size = 8.dp),
                                 )
                                 .clickable {
-                                    recoverPassword(
-                                        email = email,
-                                        name = name,
-                                    )
+                                    recoverPassword()
                                 },
                         ) {
                             Text(
@@ -177,14 +172,7 @@ fun PasswordPage(navController: NavController) {
         }
     }
 }
-
-/**
- * TODO Move this function to the passwordViewModel
- *
- * @param email
- * @param name
- * @return
- */
-fun recoverPassword(email: String, name: String): Int {
+// TODO Make function to recover password
+fun recoverPassword(): Int {
     return 0
 }

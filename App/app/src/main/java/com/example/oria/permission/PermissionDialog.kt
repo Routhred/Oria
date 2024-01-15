@@ -19,8 +19,6 @@ import com.example.oria.backend.ext.getActivity
 import com.example.oria.openAppSettings
 import com.example.oria.ui.navigation.rememberInfoScreen
 
-
-// TODO Modify permission system if time
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionDialog(

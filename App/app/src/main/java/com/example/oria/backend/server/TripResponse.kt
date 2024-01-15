@@ -1,7 +1,5 @@
 package com.example.oria.backend.server
 
-import android.graphics.Point
-import com.example.oria.backend.data.storage.point.PointDetails
 import com.example.oria.backend.data.storage.trip.TripDetails
 import kotlinx.serialization.Serializable
 

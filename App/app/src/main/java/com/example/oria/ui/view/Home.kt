@@ -2,7 +2,6 @@ package com.example.oria.ui.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,9 +26,9 @@ import androidx.navigation.NavController
 import com.example.oria.backend.location.LocationService
 import com.example.oria.backend.utils.DEBUG
 import com.example.oria.backend.utils.TagDebug
-import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.ui.navigation.ScreenInfo
 import com.example.oria.ui.navigation.rememberInfoScreen
+import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.global.HomeViewModel
 
 
@@ -63,7 +62,8 @@ fun HomePage(
             screen = screen,
             navController = navController,
             text = currentTripName,
-            tripId = currentTripId)
+            tripId = currentTripId
+        )
         tripGallery(screen = screen, navController)
         addPoint(screen = screen, navController = navController, currentTripId)
         profile(screen = screen, navController = navController)
@@ -119,7 +119,7 @@ fun addPoint(screen: ScreenInfo, navController: NavController, tripId: Int) {
         shape = RoundedCornerShape(size = 15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
         onClick = {
-            Intent(context, LocationService::class.java).apply{
+            Intent(context, LocationService::class.java).apply {
                 action = LocationService.ACTION_START
                 context.startService(this)
             }

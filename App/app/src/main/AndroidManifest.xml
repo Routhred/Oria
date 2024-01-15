@@ -29,7 +29,7 @@
         tools:targetApi="31">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAn6SkHJ1VnCjPpjPEuFscc-esYQmUvhBw"
+            android:value="${MAPS_API_KEY}"
             />
         <service android:name=".backend.location.LocationService"
             android:foregroundServiceType="location"/>

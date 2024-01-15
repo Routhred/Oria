@@ -18,10 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +33,6 @@ import com.example.oria.ui.theme.*
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.auth.RegisterViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterPage(
     navController: NavController,
@@ -48,7 +43,7 @@ fun RegisterPage(
     Box(
         modifier = Modifier
             .background(
-                when(registerState.error_code){
+                when (registerState.error_code) {
                     NO_RESPONSE -> MaterialTheme.colorScheme.background
                     else -> MaterialTheme.colorScheme.error
                 }
@@ -59,7 +54,7 @@ fun RegisterPage(
             Box(
                 modifier = Modifier
                     .background(
-                        when(registerState.error_code){
+                        when (registerState.error_code) {
                             NO_RESPONSE -> MaterialTheme.colorScheme.background
                             else -> MaterialTheme.colorScheme.error
                         }
@@ -128,12 +123,12 @@ fun RegisterPage(
                             value = viewModel.registerState.firstname,
                             label = { Text(text = "username") },
                             onValueChange = { text ->
-                                    viewModel.updateUiState(
-                                        viewModel.registerState.copy(
-                                            firstname = text,
-                                            username = text
-                                        )
+                                viewModel.updateUiState(
+                                    viewModel.registerState.copy(
+                                        firstname = text,
+                                        username = text
                                     )
+                                )
 
                             },
                             singleLine = true,
@@ -194,10 +189,12 @@ fun RegisterPage(
                                 color = MaterialTheme.colorScheme.tertiary,
                                 shape = RoundedCornerShape(size = 8.dp),
                             )
-                            .clickable {viewModel.register(
-                                context = context,
-                                navController = navController
-                            )},
+                            .clickable {
+                                viewModel.register(
+                                    context = context,
+                                    navController = navController
+                                )
+                            },
                     ) {
                         Text(
                             text = "Register",

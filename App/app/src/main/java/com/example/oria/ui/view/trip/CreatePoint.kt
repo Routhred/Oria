@@ -45,11 +45,11 @@ fun AddPointPage(
     navController: NavController,
     cameraViewModel: CameraViewModel,
     viewModel: PointEntryViewModel = viewModel(factory = AppViewModelProvider.factory)
-){
+) {
     val bitmap = cameraViewModel.getBitmap()
     val screen = rememberInfoScreen()
     val coroutine = rememberCoroutineScope()
-    Column (
+    Column(
         verticalArrangement = Arrangement.spacedBy(screen.getDpHeight(0.5f)),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -59,7 +59,7 @@ fun AddPointPage(
             )
             .fillMaxSize()
             .padding(vertical = screen.getDpHeight())
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .clickable {
@@ -75,17 +75,14 @@ fun AddPointPage(
                     shape = RoundedCornerShape(size = 15.dp)
                 ),
             contentAlignment = Alignment.Center
-        ){
-            var isImage by remember{
-                mutableStateOf(false)
-            }
-            if(bitmap != null) {
+        ) {
+            if (bitmap != null) {
                 Image(
                     bitmap.asImageBitmap(),
                     contentDescription = "Profile picture",
                     modifier = Modifier.fillMaxSize()
                 )
-            }else{
+            } else {
                 Text(text = "Click to take a photo")
             }
         }
@@ -97,14 +94,15 @@ fun AddPointPage(
             onValueChange = { text ->
                 viewModel.updateUiState(
                     viewModel.pointUiState.pointDetails.copy(name = text)
-                )},
+                )
+            },
             modifier = Modifier
                 .width(screen.getDpWidth(7))
                 .height(screen.getDpHeight(2)),
             singleLine = true,
             isError = isError
         )
-        if(isError){
+        if (isError) {
             Text(
                 text = errorText,
                 color = MaterialTheme.colorScheme.error,
@@ -117,7 +115,8 @@ fun AddPointPage(
             onValueChange = { text ->
                 viewModel.updateUiState(
                     viewModel.pointUiState.pointDetails.copy(description = text)
-                )},
+                )
+            },
             modifier = Modifier
                 .width(screen.getDpWidth(7))
                 .height(screen.getDpHeight(4))
@@ -132,7 +131,8 @@ fun AddPointPage(
                     viewModel.pointUiState.pointDetails.copy(
                         location =
                         "${OriaApplication.location.latitude};" +
-                                "${OriaApplication.location.longitude}")
+                                "${OriaApplication.location.longitude}"
+                    )
                 )
             }
         )
@@ -146,17 +146,18 @@ fun AddPointPage(
             height = 2,
             onClick = {
                 val savedImagePath = saveImageToInternalStorage(context, bitmap, imageName)
-                coroutine.launch{
+                coroutine.launch {
                     viewModel.updateUiState(
-                        viewModel.pointUiState.pointDetails.copy(image = when(savedImagePath){
-                            null -> " "
-                            else -> savedImagePath
-                        })
+                        viewModel.pointUiState.pointDetails.copy(
+                            image = when (savedImagePath) {
+                                null -> " "
+                                else -> savedImagePath
+                            }
+                        )
                     )
                     viewModel.saveItem()
                     navController.popBackStack()
                 }
-
 
 
             }
@@ -175,9 +176,9 @@ fun AddPointPage(
 }
 
 
-fun saveImageToInternalStorage(context: Context, bitmap: Bitmap?, fileName: String): String?{
+fun saveImageToInternalStorage(context: Context, bitmap: Bitmap?, fileName: String): String? {
     val file = File(context.filesDir, fileName)
-    if(bitmap != null) {
+    if (bitmap != null) {
         try {
             val stream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -188,7 +189,7 @@ fun saveImageToInternalStorage(context: Context, bitmap: Bitmap?, fileName: Stri
             e.printStackTrace()
             return null
         }
-    }else{
+    } else {
         return "No Bitmap"
     }
 }

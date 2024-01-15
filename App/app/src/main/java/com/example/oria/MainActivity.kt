@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             OriaTheme {
                 DEBUG(TagDebug.CHANGE_VIEW, "Launch NavigationGraph")
-                NavigationGraph(this)
+                NavigationGraph()
             }
         }
     }

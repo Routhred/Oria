@@ -1,10 +1,8 @@
 package com.example.oria.viewModel.global
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.oria.backend.data.storage.point.PointRepository
 import com.example.oria.backend.data.storage.trip.TripRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -15,7 +13,7 @@ class SettingsViewModel(
 
     suspend fun logout() {
         coroutineScope {
-            launch{
+            launch {
                 callLogout()
             }
 

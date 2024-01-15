@@ -4,7 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.oria.ui.theme.*
+import com.example.oria.ui.theme.GRID_COLUMN
+import com.example.oria.ui.theme.GRID_ROW
 
 /**
  * Class to store all screen route
@@ -71,6 +72,7 @@ data class ScreenInfo(
     fun getDpWidth(n: Int = 1): Dp {
         return screenWidth.div(GRID_COLUMN).times(n)
     }
+
     fun getDpHeight(n: Int = 1): Dp {
         return screenHeight.div(GRID_ROW).times(n)
     }
@@ -78,9 +80,11 @@ data class ScreenInfo(
     fun getDpWidth(n: Float): Dp {
         return screenWidth.div(GRID_COLUMN).times(n)
     }
+
     fun getDpHeight(n: Float): Dp {
         return screenHeight.div(GRID_ROW).times(n)
     }
+
     sealed class ScreenType {
         object Compact : ScreenType()
         object Medium : ScreenType()

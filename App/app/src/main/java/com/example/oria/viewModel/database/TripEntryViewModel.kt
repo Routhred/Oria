@@ -32,6 +32,7 @@ class TripEntryViewModel(
 
     var tripUiState by mutableStateOf(TripUiState())
         private set
+
     /**
      * Update current ui state with new field
      *

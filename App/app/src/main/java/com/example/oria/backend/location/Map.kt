@@ -1,7 +1,5 @@
 package com.example.oria.backend.location
 
-import android.location.Location
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.oria.backend.utils.DEBUG

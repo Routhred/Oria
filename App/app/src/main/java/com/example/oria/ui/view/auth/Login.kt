@@ -14,23 +14,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,31 +34,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.oria.MainActivity
-import com.example.oria.backend.data.storage.dataStore.PreferencesKey
-import com.example.oria.backend.ext.hasRequiredPermission
-import com.example.oria.backend.utils.DEBUG
-import com.example.oria.backend.utils.TagDebug
 import com.example.oria.permission.PermissionDialog
-import com.example.oria.ui.theme.ERROR_LOGIN
-import com.example.oria.ui.theme.ERROR_LOGIN_EMAIL
-import com.example.oria.ui.theme.ERROR_LOGIN_ID
-import com.example.oria.ui.theme.NO_ERROR
 import com.example.oria.ui.theme.NO_RESPONSE
 import com.example.oria.ui.theme.loginFontFamily
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.auth.LoginViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "pLogin")
 @Composable
 fun LoginPage(
     navController: NavController = rememberNavController(),
     viewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.factory),
 ) {
-    // TODO Import all user data when login
 
+    // TODO Make to gestion of permissions working better (not completed yet so desactivated)
     if (false /*!LocalContext.current.hasRequiredPermission(MainActivity.PERMISSION_TO_HAVE)*/) {
         Box(
             modifier = Modifier
@@ -85,7 +71,7 @@ fun LoginPage(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    when(viewModel.loginUiState.error_code){
+                    when (viewModel.loginUiState.error_code) {
                         NO_RESPONSE -> MaterialTheme.colorScheme.background
                         else -> MaterialTheme.colorScheme.error
                     }
@@ -95,7 +81,7 @@ fun LoginPage(
                 Box(
                     modifier = Modifier
                         .background(
-                            when(viewModel.loginUiState.error_code){
+                            when (viewModel.loginUiState.error_code) {
                                 NO_RESPONSE -> MaterialTheme.colorScheme.background
                                 else -> MaterialTheme.colorScheme.error
                             }
@@ -180,6 +166,8 @@ fun LoginPage(
                             )
                             OutlinedTextField(
                                 value = viewModel.loginUiState.password,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                visualTransformation = PasswordVisualTransformation(),
                                 label = { Text(text = "Password") },
                                 onValueChange = { text ->
                                     viewModel.updateUiState(
@@ -204,7 +192,7 @@ fun LoginPage(
                                         color = MaterialTheme.colorScheme.tertiary,
                                         shape = RoundedCornerShape(size = 8.dp),
                                     )
-                                    .clickable {viewModel.login(context, navController)},
+                                    .clickable { viewModel.login(context, navController) },
                             ) {
                                 Text(
                                     text = "Login",

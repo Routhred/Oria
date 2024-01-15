@@ -50,7 +50,7 @@ class LoginViewModel(private val preferencesManager: PreferencesManager) : ViewM
      * @param login
      * @param password
      */
-    fun updateUiState(login: LoginUiState, password: String = "") {
+    fun updateUiState(login: LoginUiState) {
         DEBUG(TagDebug.LOGIN, "Update Ui State")
         loginUiState = login
     }
@@ -64,7 +64,7 @@ class LoginViewModel(private val preferencesManager: PreferencesManager) : ViewM
     fun login(context: Context, navController: NavController) {
         _navController = navController
         _context = context
-        viewModelScope.launch{
+        viewModelScope.launch {
             callLogin()
         }
     }
@@ -73,28 +73,33 @@ class LoginViewModel(private val preferencesManager: PreferencesManager) : ViewM
      * function to terminate login
      *
      */
-    private fun finishLogin(){
+    private fun finishLogin() {
 
         DEBUG(TagDebug.BEGIN_FUNCTION, "finishLogin")
         val error_code: Int = loginUiState.error_code
 
         if (error_code != NO_ERROR) {
-            when(error_code){
+            when (error_code) {
                 ERROR_SERVER -> {
                     loginUiState = loginUiState.copy(error_field = "Server error")
                 }
+
                 ERROR_LOGIN_EMAIL -> {
                     loginUiState = loginUiState.copy(error_field = "Email not verified")
                 }
+
                 ERROR_LOGIN_ID -> {
                     loginUiState = loginUiState.copy(error_field = "Incorrect identifiers")
                 }
+
                 ERROR_INCORRECT_PASSWORD_FORMAT -> {
                     loginUiState = loginUiState.copy(error_field = "Incorrect password format")
                 }
+
                 ERROR_INCORRECT_USERNAME_FORMAT -> {
                     loginUiState = loginUiState.copy(error_field = "Incorrect username format")
                 }
+
                 else -> {
                     loginUiState = loginUiState.copy(error_field = "Bad request")
                 }
@@ -137,7 +142,7 @@ class LoginViewModel(private val preferencesManager: PreferencesManager) : ViewM
         loginUiState = loginUiState.copy(error_code = response.ERROR_CODE)
         DEBUG(TagDebug.LOGIN, response.TRIPS.toString())
 
-        for(trip in response.TRIPS){
+        for (trip in response.TRIPS) {
             _client.callImportTrip(
                 trip,
                 preferencesManager.getData(PreferencesKey.USERNAME, "")

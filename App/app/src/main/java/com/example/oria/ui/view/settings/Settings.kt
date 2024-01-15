@@ -24,7 +24,6 @@ import com.example.oria.ui.navigation.rememberInfoScreen
 import com.example.oria.viewModel.AppViewModelProvider
 import com.example.oria.viewModel.global.SettingsViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,14 +56,15 @@ fun SettingsPage(
         button(
             screen = screen,
             navController = navController,
-            text = "Settings")
+            text = "Settings"
+        )
         button(
             screen = screen,
             navController = navController,
             text = "Disconnect",
             color = MaterialTheme.colorScheme.error,
             onClick = {
-                GlobalScope.launch{
+                GlobalScope.launch {
                     viewModel.logout()
                 }
                 navController.navigate("auth")
@@ -79,9 +79,10 @@ fun button(
     text: String,
     height: Int = 4,
     width: Int = 7,
-    onClick: () -> Unit = {navController.navigate("main")},
+    onClick: () -> Unit = { navController.navigate("main") },
     color: Color = MaterialTheme.colorScheme.tertiary,
-    enable: Boolean = true) {
+    enable: Boolean = true
+) {
     Button(
         modifier = Modifier
             .width(screen.getDpWidth(width))

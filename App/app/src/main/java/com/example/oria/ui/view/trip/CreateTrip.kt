@@ -1,6 +1,5 @@
 package com.example.oria.ui.view.trip
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,7 +44,7 @@ import kotlinx.coroutines.launch
 fun CreateTripPage(
     navController: NavController,
     viewModel: TripEntryViewModel = viewModel(factory = AppViewModelProvider.factory)
-){
+) {
     val coroutineScope = rememberCoroutineScope()
     val screen = rememberInfoScreen()
     Box(
@@ -96,17 +95,18 @@ fun CreateTripPage(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(
                             screen.getDpHeight(0.5f),
-                            Alignment.Top),
+                            Alignment.Top
+                        ),
                     ) {
-                        var day by remember{
+                        var day by remember {
                             mutableIntStateOf(1)
                         }
-                        var month by remember{
+                        var month by remember {
                             mutableIntStateOf(1)
                         }
-                        var year by remember{
-                        mutableIntStateOf(2000)
-                    }
+                        var year by remember {
+                            mutableIntStateOf(2000)
+                        }
 
                         OutlinedTextField(
                             value = viewModel.tripUiState.tripDetails.name,
@@ -148,34 +148,37 @@ fun CreateTripPage(
                             singleLine = true,
                         )
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(screen.getDpWidth(0.5f),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                screen.getDpWidth(0.5f),
                                 Alignment
-                                .Start)
+                                    .Start
+                            )
                         ) {
                             OutlinedTextField(
                                 value = day.toString(),
-                                label = {Text(text = "Day") },
+                                label = { Text(text = "Day") },
                                 onValueChange = { text ->
-                                    day = if(text.toIntOrNull() == null){
+                                    day = if (text.toIntOrNull() == null) {
                                         0
-                                    }else{
+                                    } else {
                                         text.toInt()
                                     }
-                                                                      },
+                                },
                                 modifier = Modifier
                                     .width(screen.getDpWidth(2))
                                     .height(screen.getDpWidth(2)),
                                 singleLine = true,
-                                )
+                            )
                             OutlinedTextField(
                                 value = month.toString(),
                                 label = { Text(text = "Month") },
-                                onValueChange = { text -> month =
-                                    if(text.toIntOrNull() == null){
-                                    0
-                                    }else{
-                                        text.toInt()
-                                    }
+                                onValueChange = { text ->
+                                    month =
+                                        if (text.toIntOrNull() == null) {
+                                            0
+                                        } else {
+                                            text.toInt()
+                                        }
                                 },
                                 modifier = Modifier
                                     .width(screen.getDpWidth(2))
@@ -185,12 +188,13 @@ fun CreateTripPage(
                             OutlinedTextField(
                                 value = year.toString(),
                                 label = { Text(text = "Year") },
-                                onValueChange = { text -> year =
-                                    if(text.toIntOrNull() == null){
-                                        0
-                                    }else{
-                                        text.toInt()
-                                    }
+                                onValueChange = { text ->
+                                    year =
+                                        if (text.toIntOrNull() == null) {
+                                            0
+                                        } else {
+                                            text.toInt()
+                                        }
                                 },
                                 modifier = Modifier
                                     .width(screen.getDpWidth(2))
@@ -200,9 +204,11 @@ fun CreateTripPage(
 
                         }
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(screen.getDpWidth(), Alignment
-                                .Start)
-                        ){
+                            horizontalArrangement = Arrangement.spacedBy(
+                                screen.getDpWidth(), Alignment
+                                    .Start
+                            )
+                        ) {
                             button(
                                 screen = screen,
                                 navController = navController,
@@ -214,7 +220,7 @@ fun CreateTripPage(
                                     viewModel.updateUiState(
                                         viewModel.tripUiState.tripDetails.copy(date = "$year-$month-$day")
                                     )
-                                    coroutineScope.launch{
+                                    coroutineScope.launch {
                                         viewModel.saveItem()
                                         navController.popBackStack()
                                     }
@@ -227,7 +233,7 @@ fun CreateTripPage(
                                 height = 2,
                                 width = 3,
                                 color = MaterialTheme.colorScheme.error,
-                                onClick = {navController.popBackStack()}
+                                onClick = { navController.popBackStack() }
                             )
                         }
                         button(
@@ -235,7 +241,7 @@ fun CreateTripPage(
                             navController = navController,
                             text = "Import a trip",
                             height = 2,
-                            onClick = {navController.navigate("importTrip")}
+                            onClick = { navController.navigate("importTrip") }
                         )
 
 

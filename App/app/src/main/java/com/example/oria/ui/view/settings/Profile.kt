@@ -21,7 +21,7 @@ import com.example.oria.R
 import com.example.oria.ui.navigation.rememberInfoScreen
 
 @Composable
-fun ProfilePage(navController: NavController) {
+fun ProfilePage() {
     val screen = rememberInfoScreen()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
