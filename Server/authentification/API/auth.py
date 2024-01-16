@@ -1,10 +1,8 @@
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_text
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from django.core.mail import send_mail, EmailMessage
 from application import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -51,7 +49,8 @@ def signup(request):
         print("User saved")
         # send email when account has been created successfully
         subject = "Welcome to django-application donaldPro"
-        message = "Welcome " + my_user.first_name + " " + my_user.last_name + "\n thank for chosing Dprogrammeur website for test login.\n To order login you need to comfirm your email account.\n thanks\n\n\n donald programmeur"
+        message = "Welcome " + my_user.first_name + " " + my_user.last_name + ("\n thank for choosing Oria "
+                                                                               "Application for better trips. In order to confirm your registration, click on the link bellow")
 
         from_email = settings.EMAIL_HOST_USER
         to_list = [my_user.email]
